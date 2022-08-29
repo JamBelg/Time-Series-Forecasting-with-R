@@ -1,7 +1,8 @@
 # 
 rm(list=ls())
-setwd("/Users/Shared/Dev Jamel/Store Sales - Time Series Forecasting")
+# setwd("/Users/Shared/Dev Jamel/Store Sales - Time Series Forecasting")
 # setwd("C:/tmp/Store Sales - Time Series Forecasting")
+setwd("U:/R scripts/Project_Directory/Kaggle/Store Sales - Time Series Forecasting")
 
 # Load libraries
 library(dplyr)
@@ -62,18 +63,22 @@ df_train <- left_join(x=df_train, y=df_holidays, by="date")
 df_train <- left_join(x=df_train, y=df_oil, by="date")
 
 head(df_train,n=20)
+df_train_copy <- df_train
+
+
+# Sales family
+levels(as.factor(df_train_copy$family))
 
 
 # Relation between sales and oil price
 df_train %>%
-  # filter(type.y!="Holiday") %>%
   group_by(date) %>%
   summarise(
     daily_sales=sum(sales,na.rm=TRUE),
     daily_oil=mean(oil_NNA,na.rm=TRUE)
   ) %>%
   ggplot(aes(x=daily_oil,y=daily_sales))+geom_line()+geom_smooth()+
-  ylim(c(300000,1200000))+labs(title="Influence of the country to oil price")
+  ylim(c(300000,1200000))+labs(title="Impact of oil price")
 
 # Weekly sales
 df_train %>%
@@ -100,20 +105,25 @@ df_train %>%
   scale_x_date(date_breaks="3 month")+
   theme(axis.text.x=element_text(angle=90))
 
+# city Guayaquil
+df_train <- df_train %>%
+  mutate(date=as.Date(date)) %>%
+  filter(city=="Guayaquil") %>%
+  select(date,sales) %>%
+  group_by(date) %>%
+  summarise(
+    value=sum(sales,na.rm=TRUE)
+  )
+
+
 
 max_date=max(df_train$date)
 min_date=min(df_train$date)
-dat_ts <- df_train %>%
-  mutate(date=as.Date(date)) %>%
-  group_by(date) %>%
-  summarise(
-    daily_sales=sum(sales,na.rm=TRUE)
-  ) %>%
-  mutate(sales_weekly=zoo::rollmean(daily_sales,k=7,fill=NA))
+dat_ts <- df_train
 
-dat_ts <-ts(dat_ts$daily_sales,end=c(year(max_date), month(max_date)),
-     start=c(year(min_date), month(min_date)),
-     frequency = 52)
+dat_ts <-ts(dat_ts$value,end=c(year(max_date), month(max_date)),
+            start=c(year(min_date), month(min_date)),
+            frequency = 52)
 
 
 # Seasonal Decomposition Plot
@@ -124,19 +134,26 @@ plot(stl(dat_ts,s.window = "periodic"))
 print(adf.test(dat_ts))
 
 
-df_train <- df_train %>%
-  mutate(date=as.Date(date)) %>%
-  select(date,sales) %>%
-  group_by(date) %>%
-  summarise(
-    value=sum(sales,na.rm=TRUE)
-  )
 
+
+
+
+
+
+# split data in two
+# last 3 months for validation
 splits <- df_train %>%
   time_series_split(assess = "3 months", cumulative = TRUE)
+
 splits %>%
   tk_time_series_cv_plan() %>%
   plot_time_series_cv_plan(date, value, .interactive = FALSE)
+
+# Last 3 months
+df_train %>%
+  ggplot(aes(x=date,y=value,groups=1))+
+  geom_line()+scale_x_date(limits=c(as.Date("2017-05-01"),as.Date("2017-08-05")))+
+  labs(Title="",subtitle="Last 3 months")
 
 # Automatic Models
 # Auto Arima
@@ -150,6 +167,24 @@ model_fit_prophet <- prophet_reg(seasonality_yearly = TRUE) %>%
   set_engine("prophet") %>%
   fit(value ~ date, training(splits))
 model_fit_prophet
+
+
+
+# TBATS
+model_fit_tbats<-seasonal_reg(mode="regression",
+                              seasonal_period_1 = "auto",
+                              seasonal_period_2="1 year",
+                              seasonal_period_3="1 month") %>%
+  set_engine("tbats") %>%
+  fit(value ~ date, training(splits))
+model_fit_tbats
+
+# 4.2 Fit workflow
+workflow_fit_tbats <- workflow() %>%
+  add_model(model_spec_TBATS) %>%
+  add_recipe(recipe_spec %>% step_rm(date)) %>%
+  fit(training(splits))
+
 
 # Machine learning models
 # 1- make a recipe
@@ -186,11 +221,11 @@ workflow_fit_rf <- workflow() %>%
   add_recipe(recipe_spec %>% step_rm(date)) %>%
   fit(training(splits))
 
+
 # Hybrid ML
 # 4 Prophet boost
 model_spec_prophet_boost <- prophet_boost(seasonality_yearly = TRUE) %>%
   set_engine("prophet_xgboost") 
-
 workflow_fit_prophet_boost <- workflow() %>%
   add_model(model_spec_prophet_boost) %>%
   add_recipe(recipe_spec) %>%
@@ -199,10 +234,12 @@ workflow_fit_prophet_boost <- workflow() %>%
 workflow_fit_prophet_boost
 
 
+
 # Modeltime table
 model_table <- modeltime_table(
-  model_fit_arima, 
+  model_fit_arima,
   model_fit_prophet,
+  model_fit_tbats,
   workflow_fit_glmnet,
   workflow_fit_rf,
   workflow_fit_prophet_boost
@@ -215,7 +252,7 @@ model_table %>%
     new_data=testing(splits),
     actual_data=df_train
   ) %>%
-  plot_modeltime_forecast(.interactive = FALSE)
+  plot_modeltime_forecast(.interactive = FALSE.smooth=FALSE)
 
 
 # Calibration table
@@ -226,7 +263,7 @@ calibration_table
 
 calibration_table %>%
   modeltime_forecast(actual_data = df_train) %>%
-  plot_modeltime_forecast(.interactive = FALSE)
+  plot_modeltime_forecast(.interactive = TRUE,.smooth=FALSE)
 
 
 calibration_table %>%
@@ -240,8 +277,30 @@ calibration_table %>%
   
   # Refit and Forecast Forward
   modeltime_refit(df_train) %>%
-  modeltime_forecast(h = "12 months", actual_data = df_train) %>%
-  plot_modeltime_forecast(.interactive = FALSE)
+  modeltime_forecast(h = "3 months", actual_data = df_train) %>%
+  plot_modeltime_forecast(.interactive = TRUE,.smooth=FALSE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Daily sales
@@ -365,7 +424,7 @@ for(i in 1:nrow(Sales_daily)){
   
 }
 
-  ggplot(aes(x=date,y=sales_day))+geom_point()
+ggplot(aes(x=date,y=sales_day))+geom_point()
 
 
 # Holidays factor
@@ -436,4 +495,3 @@ df_train %>%
   mutate(Promo=ifelse(onpromotion==0,0,1)) %>%
   filter(family=="AUTOMOTIVE") %>%
   ggplot(aes(x=date,y=sales,color=as.factor(Promo)))+geom_point()
-
