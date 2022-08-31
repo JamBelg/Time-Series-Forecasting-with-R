@@ -12,9 +12,10 @@ In this tutorial, we will talk about time series forecasting. As mentioned on th
 Time series forecasting is a prediction technic for data involving time component. The idea is to use historical data to predict the future.
 I will use the data of Store Sales-Time Series Forecasting in Kaggle competition. It is about sales in Ecuador between 2013 and 2017. You can download data from [Kaggle](https://www.kaggle.com/competitions/store-sales-time-series-forecasting/overview) or directly from [my github](https://github.com/JamBelg/Time-Series-Forcasting-with-R).
 
-
-### Seasonal
-Is our data variable seasonal
+## Data analysis
+### Periodicity
+Is our data variable seasonal. It is a very important aspect as our data involves time. So we have to control the variables variation in time to see any frequency.
+####
 
 ###
 
