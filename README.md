@@ -11,11 +11,50 @@ I have been coding with R and Python since 2015.
 In this tutorial, we will talk about time series forecasting. As mentioned on the title, I will use [R](https://www.rstudio.com/) (or Posit from October 2022).
 Time series forecasting is a prediction technic for data involving time component. The idea is to use historical data to predict the future.
 I will use the data of Store Sales-Time Series Forecasting in Kaggle competition. It is about sales in Ecuador between 2013 and 2017. You can download data from [Kaggle](https://www.kaggle.com/competitions/store-sales-time-series-forecasting/overview) or directly from [my github](https://github.com/JamBelg/Time-Series-Forcasting-with-R).
+Time series forecasting can be applied in various domains such as stock/price prediction or weather prediction.
+
+I will use these libraries in this tutorial:
+```
+library(dplyr)
+library(ggplot2)
+library(forecast)
+library(stats)
+library(TTR)
+library(tseries)
+library(astsa)
+library(MLmetrics)
+library(zoo)
+library(scales)
+library(tidymodels)
+library(modeltime)
+library(timetk)   
+library(tidyverse)
+library(lubridate)
+library(stringr)
+```
 
 ## Data analysis
+### Summary
+Before jumping into model creation, it is always good to take a look into data.
+Data are separated in 6 csv files, for better understanding let's join them into one table.
+```
+# Join train with stores
+df_train <- left_join(x=df_train, y=df_stores, by="store_nbr")
+# Join train with transactions
+df_train <- left_join(x=df_train, y=df_transactions, by=c("store_nbr","date"))
+# Join train with holidays
+df_train <- left_join(x=df_train, y=df_holidays, by="date")
+# Join train with oil
+df_train <- left_join(x=df_train, y=df_oil, by="date")
+```
+### Correlation
+#### Oil dependency
+#### Holidays/events
+#### Promotions
+
 ### Periodicity
-Is our data variable seasonal. It is a very important aspect as our data involves time. So we have to control the variables variation in time to see any frequency.
+Is our data variable seasonal. It is a very important aspect as our data involves time. So we have to control the variables variation in time to see any frequency. 
 ####
 
-###
-
+## Forecasting
+There is a lot of time series forecasting models,
