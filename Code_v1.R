@@ -1,4 +1,4 @@
-# 
+# Remove objects
 rm(list=ls())
 # setwd("/Users/Shared/Dev Jamel/Store Sales - Time Series Forecasting")
 # setwd("C:/tmp/Store Sales - Time Series Forecasting")
@@ -20,12 +20,14 @@ library(modeltime)
 library(timetk)   
 library(tidyverse)
 library(lubridate)
+library(stringr)
 
 
-mape <- function(actual,pred){
-  mape <- mean(abs((actual - pred)/actual))*100
-  return (mape)
-}
+# Add link to github (make it public)
+# temp <- tempfile()
+# download.file("http://www.newcl.org/data/zipfiles/a1.zip",temp)
+# data <- read.table(unz(temp, "a1.dat"))
+# unlink(temp)
 
 
 # Read datasets
@@ -49,8 +51,13 @@ for(i in 2:nrow(df_oil)){
   }
 }
 df_oil %>%
+  mutate(date=as.Date(date)) %>%
   mutate(mod=ifelse(oil_NNA<=63,1,2)) %>%
-  ggplot(aes(x=date,y=oil_NNA,col=as.factor(mod)))+geom_point()
+  ggplot(aes(x=date,y=oil_NNA,col=as.factor(mod)))+geom_point()+
+  scale_x_date(date_breaks="1 year")+ylab("Oil price")+xlab("date")+
+  labs(title="Oil courses in Ecauador")
+
+
 
 
 # Join train with stores
@@ -66,8 +73,29 @@ head(df_train,n=20)
 df_train_copy <- df_train
 
 
-# Sales family
-levels(as.factor(df_train_copy$family))
+# Products
+Products <- df_train_copy %>%
+  group_by(family) %>%
+  summarise(
+    count=n()
+  ) %>%
+  as_tibble()
+
+# Cities
+Cities <- df_train_copy %>%
+  group_by(city) %>%
+  summarise(
+    count=n()
+  ) %>%
+  as_tibble()
+# Stores
+stores <- df_train_copy %>%
+  group_by(store_nbr) %>%
+  summarise(
+    count=n()
+  ) %>%
+  as_tibble()
+
 
 
 # Relation between sales and oil price
@@ -77,8 +105,9 @@ df_train %>%
     daily_sales=sum(sales,na.rm=TRUE),
     daily_oil=mean(oil_NNA,na.rm=TRUE)
   ) %>%
-  ggplot(aes(x=daily_oil,y=daily_sales))+geom_line()+geom_smooth()+
-  ylim(c(300000,1200000))+labs(title="Impact of oil price")
+  ggplot(aes(x=daily_oil,y=daily_sales))+geom_point()+geom_smooth()+
+  ylim(c(300000,1200000))+
+  labs(title="Impact of oil price")+xlab("Oil Price")+ylab("Daily sales")
 
 # Weekly sales
 df_train %>%
@@ -90,7 +119,8 @@ df_train %>%
   mutate(sales_weekly=zoo::rollmean(daily_sales,k=7,fill=NA)) %>%
   ggplot(aes(x=date,y=sales_weekly,group=1)) + geom_line()+geom_smooth()+
   scale_x_date(date_breaks="3 month")+
-  theme(axis.text.x=element_text(angle=90))
+  theme(axis.text.x=element_text(angle=90))+
+  xlab("Date")+ylab("Weekly sales")+labs(title="Weekly sales",subtitle="Ecuador (2013-2017)")
 
 
 # Monthly Sales
@@ -102,20 +132,75 @@ df_train %>%
   ) %>%
   mutate(sales_monthly=zoo::rollmean(daily_sales,k=30,fill=NA)) %>%
   ggplot(aes(x=date,y=sales_monthly,group=1)) + geom_line()+geom_smooth()+
-  scale_x_date(date_breaks="3 month")+
-  theme(axis.text.x=element_text(angle=90))
+  scale_x_date(date_breaks="3 month",date_labels = "%b-%Y")+
+  theme(axis.text.x=element_text(angle=90))+
+  xlab("Date")+ylab("Monthly sales")+labs(title="Monthly sales",subtitle="Ecuador (2013-2017)")
 
-# city Guayaquil
-df_train <- df_train %>%
+
+# Holidays
+data_H <- df_train %>%
   mutate(date=as.Date(date)) %>%
-  filter(city=="Guayaquil") %>%
+  filter(!is.na(type.y)) %>%
+  group_by(family,type.y,locale) %>%
+  summarise(
+    sum_H=sum(sales,na.rm=TRUE),
+    mean_H=mean(sales,na.rm=TRUE)
+  )
+
+# Food products
+df_train_copy %>%
+  
+  # Convert to date type
+  mutate(date=as.Date(date)) %>%
+  
+  # Earth quake filter
+  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
+  
+  select(date,sales,family) %>%
+  group_by(date,family) %>%
+  summarise(
+    value=sum(sales,na.rm=TRUE)
+  ) %>%
+  filter(family %in% c("EGGS","FROZEN FOODS","MEATS","SEAFOOD","PREPARED FOODS","BREAD/BAKERY")) %>%
+  ggplot(aes(x=date,y=value,groups=family,color=family))+geom_line()+
+  labs(title="Food products sales", subtitle="Ecuador (2013.2015)")+
+  xlab("Date")+ylab("Daily sales")
+
+# Liquors
+df_train_copy %>%
+  
+  # Convert to date type
+  mutate(date=as.Date(date)) %>%
+  
+  # Earth quake filter
+  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
+  
+  select(date,sales,family) %>%
+  group_by(date,family) %>%
+  summarise(
+    value=sum(sales,na.rm=TRUE)
+  ) %>%
+  filter(family %in% c("LIQUOR,WINE,BEER","BEVERAGES")) %>%
+  ggplot(aes(x=date,y=value,groups=family,color=family))+geom_line()+
+  labs(title="Beverage products sales", subtitle="Ecuador (2013.2015)")+
+  xlab("Date")+ylab("Daily sales")
+
+
+
+
+df_train <- df_train_copy %>%
+  
+  # Convert to date type
+  mutate(date=as.Date(date)) %>%
+  
+  # Earth quake filter
+  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
+  
   select(date,sales) %>%
   group_by(date) %>%
   summarise(
     value=sum(sales,na.rm=TRUE)
   )
-
-
 
 max_date=max(df_train$date)
 min_date=min(df_train$date)
@@ -123,19 +208,83 @@ dat_ts <- df_train
 
 dat_ts <-ts(dat_ts$value,end=c(year(max_date), month(max_date)),
             start=c(year(min_date), month(min_date)),
-            frequency = 52)
+            frequency = 30)
 
 
 # Seasonal Decomposition Plot
-plot(stl(dat_ts,s.window = "periodic"))
+plot(stl(dat_ts,s.window = "periodic",s.degree=0))
 
 # Augmented Dickey-Fuller(ADF) Test
 # p-value <0.05 -> data is "stationary"
 print(adf.test(dat_ts))
 
 
+# city Guayaquil, store number 24
+df_train_Guayaquil_24 <- df_train_copy %>%
+  
+  # Convert to date type
+  mutate(date=as.Date(date)) %>%
+  
+  # filter by city
+  filter(city=="Guayaquil") %>%
+  
+  # filter by store
+  filter(store_nbr==24) %>%
+  
+  # Earth quake filter
+  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
+  
+  select(date,sales) %>%
+  group_by(date) %>%
+  summarise(
+    value=sum(sales,na.rm=TRUE)
+  )
 
+# city Quito, store number 44
+df_train_Quito_44 <- df_train_copy %>%
+  
+  # Convert to date type
+  mutate(date=as.Date(date)) %>%
+  
+  # filter by city
+  filter(city=="Quito") %>%
+  
+  # filter by store
+  filter(store_nbr==48) %>%
+  
+  # Earth quake filter
+  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
+  
+  select(date,sales) %>%
+  group_by(date) %>%
+  summarise(
+    value=sum(sales,na.rm=TRUE)
+  )
 
+# Weekly
+dayofweek <- list(day=c("7-Sunday","1-Monday","2-Tuesday","3-Wednesday","4-Thursday","5-Friday","6-Saturday"))
+df_train_Guayaquil_24 %>%
+  mutate(week_day=dayofweek$day[as.POSIXlt(date)$wday+1]) %>%
+  ggplot(aes(x=week_day,y=value,fill=week_day))+geom_boxplot()+
+  labs(title="Sales by weekday",subtitle="City Guayaquil - Store 24 (2013-2017)")+
+  xlab("Weekday")+ylab("Daily sales")
+df_train_Quito_44 %>%
+  mutate(week_day=dayofweek$day[as.POSIXlt(date)$wday+1]) %>%
+  ggplot(aes(x=week_day,y=value,fill=week_day))+geom_boxplot()+
+  labs(title="Sales by weekday",subtitle="City Quito - Store 44 (2013-2017)")+
+  xlab("Weekday")+ylab("Daily sales")
+
+df_train %>%
+  mutate(week_day=dayofweek$day[as.POSIXlt(date)$wday+1]) %>%
+  group_by(week_day) %>%
+  summarise(
+    count=n(),
+    avg=mean(value,na.rm=TRUE),
+    sd=sd(value,na.rm=TRUE),
+    min=min(value,na.rm=TRUE),
+    max=max(value,na.rm=TRUE),
+    median=median(value,na.rm=TRUE)
+  )
 
 
 
@@ -144,78 +293,81 @@ print(adf.test(dat_ts))
 # last 3 months for validation
 splits <- df_train %>%
   time_series_split(assess = "3 months", cumulative = TRUE)
+# training(splits): dataset to create model
+# testing(splits): dataset to test/validate model
 
 splits %>%
   tk_time_series_cv_plan() %>%
   plot_time_series_cv_plan(date, value, .interactive = FALSE)
 
-# Last 3 months
-df_train %>%
-  ggplot(aes(x=date,y=value,groups=1))+
-  geom_line()+scale_x_date(limits=c(as.Date("2017-05-01"),as.Date("2017-08-05")))+
-  labs(Title="",subtitle="Last 3 months")
 
 # Automatic Models
-# Auto Arima
-model_fit_arima <- arima_reg() %>%
+# 1- Auto Arima
+model_fit_arima <- arima_reg(seasonal_period="auto") %>%
   set_engine("auto_arima") %>%
   fit(value ~ date, training(splits))
-model_fit_arima
 
-# Prophet
+
+
+# 2- Prophet
 model_fit_prophet <- prophet_reg(seasonality_yearly = TRUE) %>%
   set_engine("prophet") %>%
   fit(value ~ date, training(splits))
-model_fit_prophet
 
 
 
-# TBATS
+
+# 3- TBATS
 model_fit_tbats<-seasonal_reg(mode="regression",
-                              seasonal_period_1 = "auto",
-                              seasonal_period_2="1 year",
-                              seasonal_period_3="1 month") %>%
+                              seasonal_period_1= "auto",
+                              seasonal_period_2= "1 year",
+                              seasonal_period_3= "1 month") %>%
   set_engine("tbats") %>%
   fit(value ~ date, training(splits))
-model_fit_tbats
 
-# 4.2 Fit workflow
-workflow_fit_tbats <- workflow() %>%
-  add_model(model_spec_TBATS) %>%
-  add_recipe(recipe_spec %>% step_rm(date)) %>%
-  fit(training(splits))
+
+
+# 4- Seasonal Naive
+model_fit_snaive <- naive_reg(seasonal_period="1 year") %>%
+  set_engine("snaive") %>%
+  fit(value ~ date, training(splits))
+
+
 
 
 # Machine learning models
-# 1- make a recipe
+# make a recipe
 recipe_spec <- recipe(value ~ date, training(splits)) %>%
   step_timeseries_signature(date) %>%
-  step_rm(contains("am.pm"), contains("hour"), contains("minute"),
-          contains("second"), contains("xts")) %>%
-  step_fourier(date, period = 365, K = 5) %>%
+  # step_rm(contains("am.pm"), contains("hour"), contains("minute"),
+  #         contains("second"), contains("xts")) %>%
+  # K = 5 before
+  step_fourier(date, period = c(365, 91.25, 30.42), K = 5) %>%
   step_dummy(all_nominal())
 
 recipe_spec %>% prep() %>% juice()
 
-# 2- Elastic Net
+# 5- Elastic Net
 library(glmnet)
-# 2.1 Set Engine
+# 5.1 Set Engine
 model_spec_glmnet <- linear_reg(penalty = 0.01, mixture = 0.5) %>%
   set_engine("glmnet")
 
-# 2.2 Fit the workflow
+# 5.2 Fit the workflow
 workflow_fit_glmnet <- workflow() %>%
   add_model(model_spec_glmnet) %>%
   add_recipe(recipe_spec %>% step_rm(date)) %>%
   fit(training(splits))
 
-# 3- Random forest
+
+
+# 6- Random forest
 library(randomForest)
-# 3.1 Set engine
-model_spec_rf <- rand_forest(trees = 500, min_n = 50) %>%
+# 6.1 Set engine
+model_spec_rf <- rand_forest(mode="regression",trees = 500, min_n = 50) %>%
   set_engine("randomForest")
 
-# 3.2 Fit workflow
+# 6.2 Fit workflow
 workflow_fit_rf <- workflow() %>%
   add_model(model_spec_rf) %>%
   add_recipe(recipe_spec %>% step_rm(date)) %>%
@@ -223,7 +375,7 @@ workflow_fit_rf <- workflow() %>%
 
 
 # Hybrid ML
-# 4 Prophet boost
+# 7 Prophet boost
 model_spec_prophet_boost <- prophet_boost(seasonality_yearly = TRUE) %>%
   set_engine("prophet_xgboost") 
 workflow_fit_prophet_boost <- workflow() %>%
@@ -240,11 +392,12 @@ model_table <- modeltime_table(
   model_fit_arima,
   model_fit_prophet,
   model_fit_tbats,
+  model_fit_snaive,
   workflow_fit_glmnet,
   workflow_fit_rf,
   workflow_fit_prophet_boost
 ) 
-model_table
+
 
 model_table %>%
   modeltime_calibrate(new_data=testing(splits)) %>%
@@ -252,25 +405,26 @@ model_table %>%
     new_data=testing(splits),
     actual_data=df_train
   ) %>%
-  plot_modeltime_forecast(.interactive = FALSE.smooth=FALSE)
+  plot_modeltime_forecast(.y_lab="Sales",.x_lab="Date",.title="Sales forecasting",
+                          .interactive = TRUE,.smooth=FALSE)
 
 
 # Calibration table
 calibration_table <- model_table %>%
   modeltime_calibrate(testing(splits))
-calibration_table
 
 
 calibration_table %>%
   modeltime_forecast(actual_data = df_train) %>%
   plot_modeltime_forecast(.interactive = TRUE,.smooth=FALSE)
 
-
+# Models accuracy
 calibration_table %>%
   modeltime_accuracy() %>%
   table_modeltime_accuracy(.interactive = FALSE)
 
 
+# 3 months prediction
 calibration_table %>%
   # Remove ARIMA model with low accuracy
   filter(.model_id != 1) %>%
@@ -278,7 +432,8 @@ calibration_table %>%
   # Refit and Forecast Forward
   modeltime_refit(df_train) %>%
   modeltime_forecast(h = "3 months", actual_data = df_train) %>%
-  plot_modeltime_forecast(.interactive = TRUE,.smooth=FALSE)
+  plot_modeltime_forecast(.y_lab="Sales",.x_lab="Date",.title="Sales forecasting",
+                          .interactive = TRUE,.smooth=FALSE)
 
 
 
