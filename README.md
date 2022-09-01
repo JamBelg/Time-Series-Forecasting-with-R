@@ -58,3 +58,28 @@ Is our data variable seasonal. It is a very important aspect as our data involve
 
 ## Forecasting
 There is a lot of time series forecasting models,
+### ARIMA
+ARIMA is ... of auto rgressive integrative moving average. It is a combination of a moving average and autoregressive model.
+
+
+### SARIMA
+S is for Seasonal, it is ARIMA model with seasonal option.
+
+
+### Prophet
+
+
+### TBATS
+Trigonometric seasonality, Box-Cox transformation, ARMA errors, Trend and Seasonal components
+
+### Seasonal Naive
+
+
+### Elastic Net
+
+
+### Random forest
+
+
+### Prophet with boost
+
