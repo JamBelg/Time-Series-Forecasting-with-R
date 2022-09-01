@@ -77,22 +77,31 @@ str(df_stores)
 summary(df_transactions)
 str(df_transactions)
 ```
-We have 48 missing values (NA) in df_oil:</br>
+We have 43 missing values (NA) in df_oil:</br>
 ![image1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Oil_NA.jpg?raw=true)
 
 There is a lot of technics to deal with missing value, one of them is simply delete them. In this tutorial I will take the last non NA value to replace the missing values.
+```
+df_oil$oil_NNA<-df_oil$dcoilwtico
+df_oil[1,3]=df_oil[2,3]
+for(i in 2:nrow(df_oil)){
+  if(is.na(df_oil[i,3])){
+    df_oil[i,3]=prev_val
+  }else{
+    prev_val=df_oil[i,3]
+  }
+}
+```
 
 Data are separated in 6 csv files, for better understanding let's join them into one table.
 ```
-# Join train with stores
 df_train <- left_join(x=df_train, y=df_stores, by="store_nbr")
-# Join train with transactions
 df_train <- left_join(x=df_train, y=df_transactions, by=c("store_nbr","date"))
-# Join train with holidays
 df_train <- left_join(x=df_train, y=df_holidays, by="date")
-# Join train with oil
 df_train <- left_join(x=df_train, y=df_oil, by="date")
+head(df_train,n=20)
 ```
+
 ### Correlation
 #### Oil dependency
 #### Holidays/events
