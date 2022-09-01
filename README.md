@@ -77,8 +77,10 @@ str(df_stores)
 summary(df_transactions)
 str(df_transactions)
 ```
-We have NA value in df_oil:
-![image1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/tree/main/pics/Oil_NA.jpg?raw=true)
+We have 48 missing values (NA) in df_oil:</br>
+![image1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Oil_NA.jpg?raw=true)
+
+There is a lot of technics to deal with missing value, one of them is simply delete them. In this tutorial I will take the last non NA value to replace the missing values.
 
 Data are separated in 6 csv files, for better understanding let's join them into one table.
 ```
