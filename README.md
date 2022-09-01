@@ -78,7 +78,7 @@ summary(df_transactions)
 str(df_transactions)
 ```
 We have NA value in df_oil:
-![image1](https://github.com/JamBelg/Time-Series-Forecasting-with-R/blob/main/pics/Oil_NA.jpg?raw=true)
+![image1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/tree/main/pics/Oil_NA.jpg?raw=true)
 
 Data are separated in 6 csv files, for better understanding let's join them into one table.
 ```
