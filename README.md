@@ -102,6 +102,20 @@ df_train <- left_join(x=df_train, y=df_oil, by="date")
 head(df_train,n=20)
 ```
 
+Daily sales plot
+```
+plot1<-df_train %>%
+  group_by(date) %>%
+  summarise(
+    daily_sales=sum(sales)
+  ) %>%
+  ggplot(aes(x=date,y=daily_sales,groups=1))+geom_line()+geom_smooth()+
+  labs(title="Sales",subtitle="Ecuador (2013-2017)")+
+  xlab("Date")+ylab("Sales")
+ggsave("pics/plot1.png")
+```
+
+
 ### Correlation
 #### Oil dependency
 #### Holidays/events
