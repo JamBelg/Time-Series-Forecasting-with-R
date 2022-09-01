@@ -34,8 +34,52 @@ library(stringr)
 ```
 
 ## Data analysis
+
+### Reading
+
+```
+df_train=read.csv(file="data/train.csv", 
+                  header=TRUE, sep=",", 
+                  colClasses=c("integer","Date","factor","factor","numeric","numeric"))
+
+df_test=read.csv(file="data/test.csv", 
+                 header=TRUE, sep=",",
+                 colClasses=c("integer","Date","factor","factor","numeric"))
+
+df_oil = read.csv(file="data/oil.csv", 
+                  header=TRUE, sep=",",
+                  colClasses=c("Date","numeric"))
+
+df_holidays = read.csv(file="data/holidays_events.csv", 
+                       header=TRUE, sep=",",
+                       colClasses=c("Date","factor","factor","factor","character","factor"))
+
+df_stores = read.csv(file="data/stores.csv",
+                     header=TRUE, sep=",",
+                     colClasses =c("factor","factor","factor","factor","integer"))
+
+df_transactions = read.csv(file="data/transactions.csv", 
+                           header=TRUE, sep=",",
+                           colClasses=c("Date","factor","numeric"))
+```
+
 ### Summary
 Before jumping into model creation, it is always good to take a look into data.
+```
+summary(df_train)
+str(df_train)
+summary(df_oil)
+str(df_oil)
+summary(df_holidays)
+str(df_holidays)
+summary(df_stores)
+str(df_stores)
+summary(df_transactions)
+str(df_transactions)
+```
+We have NA value in df_oil:
+
+
 Data are separated in 6 csv files, for better understanding let's join them into one table.
 ```
 # Join train with stores
