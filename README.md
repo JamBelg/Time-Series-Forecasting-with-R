@@ -114,7 +114,7 @@ plot1<-df_train %>%
   xlab("Date")+ylab("Sales")
 ggsave("pics/plot1.png")
 ```
-
+![image1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot1.png?raw=true)
 
 ### Correlation
 #### Oil dependency
