@@ -315,4 +315,4 @@ calibration_table %>%
   plot_modeltime_forecast(.y_lab="Sales",.x_lab="Date",.title="Sales forecasting",
                           .interactive = FALSE,.smooth=TRUE)
 ```
-<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/3m_prediction.png?raw=true" width="700" height="700">
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/3m_prediction.png?raw=true" width="717" height="365">
