@@ -281,3 +281,12 @@ calibration_table %>%
   table_modeltime_accuracy(.interactive = FALSE)
 
 ```
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Accuracy_table.png?raw=true" width="700" height="700">
+The table is in ascending order by MAE.
+Definition of columns:
+- MAE: Mean absolute error
+- MAPE: Mean absolute percentage error
+- MASE: Mean absolute scaled error
+- SMAPE: Symmetric mean absolute percentage error
+- RMSE: Root mean squared error
+RSQ: R-squared
