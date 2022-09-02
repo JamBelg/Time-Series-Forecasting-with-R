@@ -274,10 +274,15 @@ model_table <- modeltime_table(
   workflow_fit_rf,
   workflow_fit_prophet_boost,
 )
+
+# Calibration table
+calibration_table <- model_table %>%
+  modeltime_calibrate(testing(splits))
+
 # Models accuracy
 calibration_table %>%
   modeltime_accuracy() %>%
-  arrange(mae) %>%
+  arrange(desc(rsq)) %>%
   table_modeltime_accuracy(.interactive = FALSE)
 
 ```
@@ -289,4 +294,5 @@ Definition of columns:
 - SMAPE: Symmetric mean absolute percentage error</br>
 - RMSE: Root mean squared error</br>
 - RSQ: R-squared</br>
-The table is in ascending order by MAE.
+The table is in descending order by RSQ. We can conclude that:
+- 
