@@ -118,7 +118,37 @@ ggsave("pics/plot1.png")
 
 ### Correlation
 #### Oil dependency
+Oil price fluctuation have a big impact on economie, and Ecuador have a high dependency on oil.
+```
+plot_salesvsoil <-df_train %>%
+  group_by(date) %>%
+  summarise(
+    daily_sales=sum(sales,na.rm=TRUE),
+    daily_oil=mean(oil_NNA,na.rm=TRUE)
+  ) %>%
+  ggplot(aes(x=daily_oil,y=daily_sales))+geom_point()+geom_smooth()+
+  ylim(c(300000,1200000))+
+  labs(title="Impact of oil price",subtitle="Ecuador (2013-2017)")+
+  xlab("Oil Price")+ylab("Daily sales")
+ggsave("pics/plot_oil.png")
+```
+![image2](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_oil.png?raw=true)
 #### Holidays/events
+
+```
+plot_holidays <-df_train %>%
+  mutate(holidays_fact=ifelse(is.na(locale) | locale!="National","No","Yes")) %>%
+  group_by(date) %>%
+  summarise(
+    daily_sales=sum(sales,na.rm=TRUE),
+    holidays_fact=min(holidays_fact,na.rm=TRUE)
+  )%>%
+  mutate(holidays_fact=factor(holidays_fact,levels=c("No","Yes"))) %>%
+  ggplot(aes(x=holidays_fact,y=daily_sales,fill=holidays_fact,group=holidays_fact))+geom_boxplot()+
+  labs(title="Average sales",subtitle="Ecuador (2013-2017)")+xlab("Holidays ?")+ylab("Average daily sales")
+ggsave("pics/plot_holidays.png")
+```
+![image3](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_holidays.png?raw=true)
 #### Promotions
 
 ### Periodicity
