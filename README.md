@@ -185,8 +185,12 @@ dev.off()
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/stl_plot.png?raw=true" width="700" height="700">
 
 # Forecasting
-There is a lot of time series forecasting models,
+There is a lot of time series forecasting models, we can sort them into three categories:
+ - Automatic models: are the simplest and the easiest to implement.</br>
+ - Machine learning models: are more complex,</br>
+ - Boosted models:</br>
 ## Automatic models
+Automatic models are the easiest to use.
 ### ARIMA
 ARIMA is abbreviation of Auto Regressive Integrative Moving Average. It is a combination of a moving average and autoregressive model.
 
