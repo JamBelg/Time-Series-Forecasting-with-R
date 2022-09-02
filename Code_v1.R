@@ -31,13 +31,42 @@ library(stringr)
 
 
 # Read datasets
-df_train=read.csv("data/train.csv", sep=",")
-df_test=read.csv("data/test.csv", sep=",")
-df_oil = read.csv("data/oil.csv", sep=",")
-df_holidays = read.csv("data/holidays_events.csv", sep=",")
-df_stores = read.csv("data/stores.csv",sep=",")
-df_transactions = read.csv("data/transactions.csv", sep=",")
 
+df_train=read.csv(file="data/train.csv", 
+                  header=TRUE, sep=",", 
+                  colClasses=c("integer","Date","factor","factor","numeric","numeric"))
+
+df_test=read.csv(file="data/test.csv", 
+                 header=TRUE, sep=",",
+                 colClasses=c("integer","Date","factor","factor","numeric"))
+
+df_oil = read.csv(file="data/oil.csv", 
+                  header=TRUE, sep=",",
+                  colClasses=c("Date","numeric"))
+
+df_holidays = read.csv(file="data/holidays_events.csv", 
+                       header=TRUE, sep=",",
+                       colClasses=c("Date","factor","factor","factor","character","factor"))
+
+df_stores = read.csv(file="data/stores.csv",
+                     header=TRUE, sep=",",
+                     colClasses =c("factor","factor","factor","factor","integer"))
+
+df_transactions = read.csv(file="data/transactions.csv", 
+                           header=TRUE, sep=",",
+                           colClasses=c("Date","factor","numeric"))
+
+
+summary(df_train)
+str(df_train)
+summary(df_oil)
+str(df_oil)
+summary(df_holidays)
+str(df_holidays)
+summary(df_stores)
+str(df_stores)
+summary(df_transactions)
+str(df_transactions)
 
 # Oil factor
 # Plot oil price (model1 if oil <=63 else model2)
@@ -59,47 +88,107 @@ df_oil %>%
 
 
 
-
-# Join train with stores
+# Join tables
 df_train <- left_join(x=df_train, y=df_stores, by="store_nbr")
-# Join train with transactions
 df_train <- left_join(x=df_train, y=df_transactions, by=c("store_nbr","date"))
-# Join train with holidays
+df_train[is.na(df_train$transactions),11] <- 0
 df_train <- left_join(x=df_train, y=df_holidays, by="date")
-# Join train with oil
 df_train <- left_join(x=df_train, y=df_oil, by="date")
 
 head(df_train,n=20)
 df_train_copy <- df_train
 
+# Daily sales
+plot1<-df_train %>%
+  group_by(date) %>%
+  summarise(
+    daily_sales=sum(sales)
+  ) %>%
+  ggplot(aes(x=date,y=daily_sales,groups=1))+geom_line()+geom_smooth()+
+  labs(title="Sales",subtitle="Ecuador (2013-2017)")+
+  xlab("Date")+ylab("Sales")
+ggsave("pics/plot1.png")
+
+
+
+
+# Holidays factor
+df_holidays %>%
+  distinct(date) %>%
+  mutate(Year=year(date)) %>%
+  group_by(Year,locale) %>%
+  summarise(
+    count=n()
+  )
+plot_holidays <-df_train %>%
+  mutate(holidays_fact=ifelse(is.na(locale) | locale!="National","No","Yes")) %>%
+  group_by(date) %>%
+  summarise(
+    daily_sales=sum(sales,na.rm=TRUE),
+    holidays_fact=min(holidays_fact,na.rm=TRUE)
+  )%>%
+  mutate(holidays_fact=factor(holidays_fact,levels=c("No","Yes"))) %>%
+  ggplot(aes(x=holidays_fact,y=daily_sales,fill=holidays_fact,group=holidays_fact))+geom_boxplot()+
+  labs(title="Average sales",subtitle="Ecuador (2013-2017)")+xlab("National holidays (Yes / No)")+ylab("Average daily sales")
+ggsave("pics/plot_holidays.png")
+
+
+
 
 # Products
-Products <- df_train_copy %>%
+plot_products <-df_train %>%
+  group_by(date,family) %>%
+  summarise(
+    daily_sales=sum(sales,na.rm=TRUE)
+  ) %>%
+  filter(family %in% levels(family)[c(11:12,30,33)]) %>%
+  ggplot(aes(x=date,y=daily_sales,color=family))+geom_line()+
+  facet_grid(rows=vars(family))+labs(title="Daily sales for some products",subtitle="Ecuador (2013-2017)")+
+  xlab("Date")+ylab("Daily sales")
+ggsave("pics/plot_products.png")
+
+Products <- df_train %>%
   group_by(family) %>%
   summarise(
-    count=n()
+    sales_total=sum(sales,na.rm=TRUE),
+    sales_mean=mean(sales,na.rm=TRUE),
+    sales_median=median(sales,na.rm=TRUE),
   ) %>%
+  arrange(desc(sales_total)) %>%
   as_tibble()
 
+
+
 # Cities
-Cities <- df_train_copy %>%
-  group_by(city) %>%
+plot_cities <- df_train %>%
+  group_by(date,city) %>%
   summarise(
-    count=n()
+    sales=sum(sales,na.rm=TRUE)
   ) %>%
-  as_tibble()
-# Stores
-stores <- df_train_copy %>%
-  group_by(store_nbr) %>%
+  ggplot(aes(x=city,y=sales,color=city))+geom_boxplot()+
+  labs(title="Daily sales by city",subtitle="Ecuador (2013-2017)")+
+  xlab("City")+ylab("Sales")
+ggsave("pics/plot_city1.png")
+
+
+plot_cities2 <- df_train %>%
+  group_by(date,city) %>%
   summarise(
-    count=n()
+    sales=sum(sales,na.rm=TRUE)
   ) %>%
-  as_tibble()
+  filter(city %in% levels(city)[c(1:4)]) %>%
+  ggplot(aes(x=date,y=sales,color=city))+geom_line()+
+  facet_grid(rows=vars(city))+
+  labs(title="Daily sales for some cities",subtitle="Ecuador (2013-2017)")+
+  xlab("Date")+ylab("Daily sales")
+ggsave("pics/plot_city2.png")
+
+
 
 
 
 # Relation between sales and oil price
-df_train %>%
+plot_salesvsoil <-df_train %>%
   group_by(date) %>%
   summarise(
     daily_sales=sum(sales,na.rm=TRUE),
@@ -107,92 +196,21 @@ df_train %>%
   ) %>%
   ggplot(aes(x=daily_oil,y=daily_sales))+geom_point()+geom_smooth()+
   ylim(c(300000,1200000))+
-  labs(title="Impact of oil price")+xlab("Oil Price")+ylab("Daily sales")
-
-# Weekly sales
-df_train %>%
-  mutate(date=as.Date(date)) %>%
-  group_by(date) %>%
-  summarise(
-    daily_sales=sum(sales,na.rm=TRUE)
-  ) %>%
-  mutate(sales_weekly=zoo::rollmean(daily_sales,k=7,fill=NA)) %>%
-  ggplot(aes(x=date,y=sales_weekly,group=1)) + geom_line()+geom_smooth()+
-  scale_x_date(date_breaks="3 month")+
-  theme(axis.text.x=element_text(angle=90))+
-  xlab("Date")+ylab("Weekly sales")+labs(title="Weekly sales",subtitle="Ecuador (2013-2017)")
-
-
-# Monthly Sales
-df_train %>%
-  mutate(date=as.Date(date)) %>%
-  group_by(date) %>%
-  summarise(
-    daily_sales=sum(sales,na.rm=TRUE)
-  ) %>%
-  mutate(sales_monthly=zoo::rollmean(daily_sales,k=30,fill=NA)) %>%
-  ggplot(aes(x=date,y=sales_monthly,group=1)) + geom_line()+geom_smooth()+
-  scale_x_date(date_breaks="3 month",date_labels = "%b-%Y")+
-  theme(axis.text.x=element_text(angle=90))+
-  xlab("Date")+ylab("Monthly sales")+labs(title="Monthly sales",subtitle="Ecuador (2013-2017)")
-
-
-# Holidays
-data_H <- df_train %>%
-  mutate(date=as.Date(date)) %>%
-  filter(!is.na(type.y)) %>%
-  group_by(family,type.y,locale) %>%
-  summarise(
-    sum_H=sum(sales,na.rm=TRUE),
-    mean_H=mean(sales,na.rm=TRUE)
-  )
-
-# Food products
-df_train_copy %>%
-  
-  # Convert to date type
-  mutate(date=as.Date(date)) %>%
-  
-  # Earth quake filter
-  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
-  
-  select(date,sales,family) %>%
-  group_by(date,family) %>%
-  summarise(
-    value=sum(sales,na.rm=TRUE)
-  ) %>%
-  filter(family %in% c("EGGS","FROZEN FOODS","MEATS","SEAFOOD","PREPARED FOODS","BREAD/BAKERY")) %>%
-  ggplot(aes(x=date,y=value,groups=family,color=family))+geom_line()+
-  labs(title="Food products sales", subtitle="Ecuador (2013.2015)")+
-  xlab("Date")+ylab("Daily sales")
-
-# Liquors
-df_train_copy %>%
-  
-  # Convert to date type
-  mutate(date=as.Date(date)) %>%
-  
-  # Earth quake filter
-  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
-  
-  select(date,sales,family) %>%
-  group_by(date,family) %>%
-  summarise(
-    value=sum(sales,na.rm=TRUE)
-  ) %>%
-  filter(family %in% c("LIQUOR,WINE,BEER","BEVERAGES")) %>%
-  ggplot(aes(x=date,y=value,groups=family,color=family))+geom_line()+
-  labs(title="Beverage products sales", subtitle="Ecuador (2013.2015)")+
-  xlab("Date")+ylab("Daily sales")
+  labs(title="Impact of oil price",subtitle="Ecuador (2013-2017)")+
+  xlab("Oil Price")+ylab("Daily sales")
+ggsave("pics/plot_oil.png")
 
 
 
 
-df_train <- df_train_copy %>%
-  
-  # Convert to date type
-  mutate(date=as.Date(date)) %>%
-  
+
+
+
+# Seasonal decomposition
+max_date=max(df_train$date)
+min_date=min(df_train$date)
+
+dat_ts <- df_train %>%
   # Earth quake filter
   filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
   
@@ -202,96 +220,44 @@ df_train <- df_train_copy %>%
     value=sum(sales,na.rm=TRUE)
   )
 
-max_date=max(df_train$date)
-min_date=min(df_train$date)
-dat_ts <- df_train
-
 dat_ts <-ts(dat_ts$value,end=c(year(max_date), month(max_date)),
             start=c(year(min_date), month(min_date)),
             frequency = 30)
 
-
 # Seasonal Decomposition Plot
-plot(stl(dat_ts,s.window = "periodic",s.degree=0))
+png(file="pics/stl_plot.png",
+    width = 960, height = 960, units = "px", pointsize = 20,
+    bg="azure")
+plot(stl(dat_ts,s.window = "periodic"), 
+     main="Seasonal Decomposition of Time Series by Loess")
+dev.off()
+
 
 # Augmented Dickey-Fuller(ADF) Test
 # p-value <0.05 -> data is "stationary"
 print(adf.test(dat_ts))
 
 
-# city Guayaquil, store number 24
-df_train_Guayaquil_24 <- df_train_copy %>%
-  
-  # Convert to date type
-  mutate(date=as.Date(date)) %>%
-  
-  # filter by city
-  filter(city=="Guayaquil") %>%
-  
-  # filter by store
-  filter(store_nbr==24) %>%
-  
-  # Earth quake filter
+
+
+
+
+
+
+# Store_nbr 51
+data<- df_train %>%
   filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
-  
-  select(date,sales) %>%
+  filter(store_nbr==51) %>%
   group_by(date) %>%
   summarise(
-    value=sum(sales,na.rm=TRUE)
+    value=mean(sales,na.rm=TRUE)
   )
-
-# city Quito, store number 44
-df_train_Quito_44 <- df_train_copy %>%
-  
-  # Convert to date type
-  mutate(date=as.Date(date)) %>%
-  
-  # filter by city
-  filter(city=="Quito") %>%
-  
-  # filter by store
-  filter(store_nbr==48) %>%
-  
-  # Earth quake filter
-  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
-  
-  select(date,sales) %>%
-  group_by(date) %>%
-  summarise(
-    value=sum(sales,na.rm=TRUE)
-  )
-
-# Weekly
-dayofweek <- list(day=c("7-Sunday","1-Monday","2-Tuesday","3-Wednesday","4-Thursday","5-Friday","6-Saturday"))
-df_train_Guayaquil_24 %>%
-  mutate(week_day=dayofweek$day[as.POSIXlt(date)$wday+1]) %>%
-  ggplot(aes(x=week_day,y=value,fill=week_day))+geom_boxplot()+
-  labs(title="Sales by weekday",subtitle="City Guayaquil - Store 24 (2013-2017)")+
-  xlab("Weekday")+ylab("Daily sales")
-df_train_Quito_44 %>%
-  mutate(week_day=dayofweek$day[as.POSIXlt(date)$wday+1]) %>%
-  ggplot(aes(x=week_day,y=value,fill=week_day))+geom_boxplot()+
-  labs(title="Sales by weekday",subtitle="City Quito - Store 44 (2013-2017)")+
-  xlab("Weekday")+ylab("Daily sales")
-
-df_train %>%
-  mutate(week_day=dayofweek$day[as.POSIXlt(date)$wday+1]) %>%
-  group_by(week_day) %>%
-  summarise(
-    count=n(),
-    avg=mean(value,na.rm=TRUE),
-    sd=sd(value,na.rm=TRUE),
-    min=min(value,na.rm=TRUE),
-    max=max(value,na.rm=TRUE),
-    median=median(value,na.rm=TRUE)
-  )
-
 
 
 
 # split data in two
 # last 3 months for validation
-splits <- df_train %>%
+splits <- data %>%
   time_series_split(assess = "3 months", cumulative = TRUE)
 # training(splits): dataset to create model
 # testing(splits): dataset to test/validate model
@@ -303,15 +269,16 @@ splits %>%
 
 # Automatic Models
 # 1- Auto Arima
-model_fit_arima <- arima_reg(seasonal_period="auto") %>%
+model_fit_arima <- arima_reg() %>%
   set_engine("auto_arima") %>%
   fit(value ~ date, training(splits))
+model_fit_arima
 
 
 
 # 2- Prophet
-model_fit_prophet <- prophet_reg(seasonality_yearly = TRUE) %>%
-  set_engine("prophet") %>%
+model_fit_prophet <- prophet_reg(seasonality_yearly = TRUE,seasonality_weekly =TRUE) %>%
+  set_engine("prophet",holidays=df_holidays) %>%
   fit(value ~ date, training(splits))
 
 
@@ -339,11 +306,8 @@ model_fit_snaive <- naive_reg(seasonal_period="1 year") %>%
 # make a recipe
 recipe_spec <- recipe(value ~ date, training(splits)) %>%
   step_timeseries_signature(date) %>%
-  # step_rm(contains("am.pm"), contains("hour"), contains("minute"),
-  #         contains("second"), contains("xts")) %>%
-  # K = 5 before
   step_fourier(date, period = c(365, 91.25, 30.42), K = 5) %>%
-  step_dummy(all_nominal())
+  step_dummy(all_nominal(),all_predictors())
 
 recipe_spec %>% prep() %>% juice()
 
@@ -376,7 +340,7 @@ workflow_fit_rf <- workflow() %>%
 
 # Hybrid ML
 # 7 Prophet boost
-model_spec_prophet_boost <- prophet_boost(seasonality_yearly = TRUE) %>%
+model_spec_prophet_boost <- prophet_boost() %>%
   set_engine("prophet_xgboost") 
 workflow_fit_prophet_boost <- workflow() %>%
   add_model(model_spec_prophet_boost) %>%
@@ -399,14 +363,21 @@ model_table <- modeltime_table(
 ) 
 
 
-model_table %>%
-  modeltime_calibrate(new_data=testing(splits)) %>%
-  modeltime_forecast(
-    new_data=testing(splits),
-    actual_data=df_train
-  ) %>%
-  plot_modeltime_forecast(.y_lab="Sales",.x_lab="Date",.title="Sales forecasting",
-                          .interactive = TRUE,.smooth=FALSE)
+# model_table %>%
+#   modeltime_calibrate(new_data=testing(splits)) %>%
+#   modeltime_forecast(
+#     new_data=testing(splits),
+#     actual_data=df_train
+#   ) %>%
+#   plot_modeltime_forecast(.y_lab="Sales",.x_lab="Date",.title="Sales forecasting",
+#                           .interactive = TRUE,.smooth=FALSE)
+
+calibration_table <- model_table %>%
+  modeltime_calibrate(testing(splits))
+calibration_table %>%
+  modeltime_forecast(actual_data = tail(data,120)) %>%
+  plot_modeltime_forecast(.interactive = FALSE,.conf_interval_show = FALSE)
+
 
 
 # Calibration table
@@ -415,25 +386,26 @@ calibration_table <- model_table %>%
 
 
 calibration_table %>%
-  modeltime_forecast(actual_data = df_train) %>%
+  modeltime_forecast(actual_data = data) %>%
   plot_modeltime_forecast(.interactive = TRUE,.smooth=FALSE)
 
 # Models accuracy
 calibration_table %>%
   modeltime_accuracy() %>%
+  arrange(desc(rsq)) %>%
   table_modeltime_accuracy(.interactive = FALSE)
 
 
 # 3 months prediction
 calibration_table %>%
-  # Remove ARIMA model with low accuracy
-  filter(.model_id != 1) %>%
+  # Take Random forest model
+  filter(.model_id == 6) %>%
   
   # Refit and Forecast Forward
-  modeltime_refit(df_train) %>%
-  modeltime_forecast(h = "3 months", actual_data = df_train) %>%
+  modeltime_refit(data) %>%
+  modeltime_forecast(h = "12 month", actual_data = tail(data,600)) %>%
   plot_modeltime_forecast(.y_lab="Sales",.x_lab="Date",.title="Sales forecasting",
-                          .interactive = TRUE,.smooth=FALSE)
+                          .interactive = FALSE,.smooth=TRUE)
 
 
 
@@ -570,6 +542,179 @@ legend("topleft",inset=.03,legend=c("actual", "predicted"),col=c("blue","orange"
 
 # -----------------------------------------------------------------------
 # To DO
+
+
+
+
+
+
+
+
+# city Guayaquil, store number 24
+df_train_Guayaquil_24 <- df_train_copy %>%
+  
+  # Convert to date type
+  mutate(date=as.Date(date)) %>%
+  
+  # filter by city
+  filter(city=="Guayaquil") %>%
+  
+  # filter by store
+  filter(store_nbr==24) %>%
+  
+  # Earth quake filter
+  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
+  
+  select(date,sales) %>%
+  group_by(date) %>%
+  summarise(
+    value=sum(sales,na.rm=TRUE)
+  )
+
+# city Quito, store number 44
+df_train_Quito_44 <- df_train_copy %>%
+  
+  # Convert to date type
+  mutate(date=as.Date(date)) %>%
+  
+  # filter by city
+  filter(city=="Quito") %>%
+  
+  # filter by store
+  filter(store_nbr==48) %>%
+  
+  # Earth quake filter
+  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
+  
+  select(date,sales) %>%
+  group_by(date) %>%
+  summarise(
+    value=sum(sales,na.rm=TRUE)
+  )
+
+
+
+# Weekly
+dayofweek <- list(day=c("7-Sunday","1-Monday","2-Tuesday","3-Wednesday","4-Thursday","5-Friday","6-Saturday"))
+df_train_Guayaquil_24 %>%
+  mutate(week_day=dayofweek$day[as.POSIXlt(date)$wday+1]) %>%
+  ggplot(aes(x=week_day,y=value,fill=week_day))+geom_boxplot()+
+  labs(title="Sales by weekday",subtitle="City Guayaquil - Store 24 (2013-2017)")+
+  xlab("Weekday")+ylab("Daily sales")
+df_train_Quito_44 %>%
+  mutate(week_day=dayofweek$day[as.POSIXlt(date)$wday+1]) %>%
+  ggplot(aes(x=week_day,y=value,fill=week_day))+geom_boxplot()+
+  labs(title="Sales by weekday",subtitle="City Quito - Store 44 (2013-2017)")+
+  xlab("Weekday")+ylab("Daily sales")
+
+df_train %>%
+  mutate(week_day=dayofweek$day[as.POSIXlt(date)$wday+1]) %>%
+  group_by(week_day) %>%
+  summarise(
+    count=n(),
+    avg=mean(value,na.rm=TRUE),
+    sd=sd(value,na.rm=TRUE),
+    min=min(value,na.rm=TRUE),
+    max=max(value,na.rm=TRUE),
+    median=median(value,na.rm=TRUE)
+  )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Weekly sales
+df_train %>%
+  mutate(date=as.Date(date)) %>%
+  group_by(date) %>%
+  summarise(
+    daily_sales=sum(sales,na.rm=TRUE)
+  ) %>%
+  mutate(sales_weekly=zoo::rollmean(daily_sales,k=7,fill=NA)) %>%
+  ggplot(aes(x=date,y=sales_weekly,group=1)) + geom_line()+geom_smooth()+
+  scale_x_date(date_breaks="3 month")+
+  theme(axis.text.x=element_text(angle=90))+
+  xlab("Date")+ylab("Weekly sales")+labs(title="Weekly sales",subtitle="Ecuador (2013-2017)")
+
+
+# Monthly Sales
+df_train %>%
+  mutate(date=as.Date(date)) %>%
+  group_by(date) %>%
+  summarise(
+    daily_sales=sum(sales,na.rm=TRUE)
+  ) %>%
+  mutate(sales_monthly=zoo::rollmean(daily_sales,k=30,fill=NA)) %>%
+  ggplot(aes(x=date,y=sales_monthly,group=1)) + geom_line()+geom_smooth()+
+  scale_x_date(date_breaks="3 month",date_labels = "%b-%Y")+
+  theme(axis.text.x=element_text(angle=90))+
+  xlab("Date")+ylab("Monthly sales")+labs(title="Monthly sales",subtitle="Ecuador (2013-2017)")
+
+
+# Holidays
+data_H <- df_train %>%
+  mutate(date=as.Date(date)) %>%
+  filter(!is.na(type.y)) %>%
+  group_by(family,type.y,locale) %>%
+  summarise(
+    sum_H=sum(sales,na.rm=TRUE),
+    mean_H=mean(sales,na.rm=TRUE)
+  )
+
+# Food products
+df_train_copy %>%
+  
+  # Convert to date type
+  mutate(date=as.Date(date)) %>%
+  
+  # Earth quake filter
+  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
+  
+  select(date,sales,family) %>%
+  group_by(date,family) %>%
+  summarise(
+    value=sum(sales,na.rm=TRUE)
+  ) %>%
+  filter(family %in% c("EGGS","FROZEN FOODS","MEATS","SEAFOOD","PREPARED FOODS","BREAD/BAKERY")) %>%
+  ggplot(aes(x=date,y=value,groups=family,color=family))+geom_line()+
+  labs(title="Food products sales", subtitle="Ecuador (2013.2015)")+
+  xlab("Date")+ylab("Daily sales")
+
+# Liquors
+df_train_copy %>%
+  
+  # Convert to date type
+  mutate(date=as.Date(date)) %>%
+  
+  # Earth quake filter
+  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
+  
+  select(date,sales,family) %>%
+  group_by(date,family) %>%
+  summarise(
+    value=sum(sales,na.rm=TRUE)
+  ) %>%
+  filter(family %in% c("LIQUOR,WINE,BEER","BEVERAGES")) %>%
+  ggplot(aes(x=date,y=value,groups=family,color=family))+geom_line()+
+  labs(title="Beverage products sales", subtitle="Ecuador (2013.2015)")+
+  xlab("Date")+ylab("Daily sales")
+
+
+
+
+
+
+
 Sales_daily <- df_train %>%
   group_by(date) %>%
   summarise(
