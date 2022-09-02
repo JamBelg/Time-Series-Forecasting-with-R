@@ -291,7 +291,7 @@ calibration_table %>%
 
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Accuracy_table.png?raw=true" width="700" height="700">
-Definition of columns:
+Definition of columns:</br>
 - MAE: Mean absolute error</br>
 - MAPE: Mean absolute percentage error</br>
 - MASE: Mean absolute scaled error</br>
@@ -299,4 +299,19 @@ Definition of columns:
 - RMSE: Root mean squared error</br>
 - RSQ: R-squared</br>
 The table is in descending order by RSQ. We can conclude that:
-- 
+- Random forest model is the best model
+- Boosted prophet offer a better RSQ
+
+Once the model is selected, we can apply it to predict the future.
+```
+# 3 months prediction
+calibration_table %>%
+  # Take Random forest model
+  filter(.model_id == 6) %>%
+  
+  # Refit and Forecast Forward
+  modeltime_refit(data) %>%
+  modeltime_forecast(h = "3 month", actual_data = tail(data,100)) %>%
+  plot_modeltime_forecast(.y_lab="Sales",.x_lab="Date",.title="Sales forecasting",
+                          .interactive = FALSE,.smooth=TRUE)
+```
