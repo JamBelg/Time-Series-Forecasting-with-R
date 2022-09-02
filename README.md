@@ -133,8 +133,9 @@ plot_salesvsoil <-df_train %>%
 ggsave("pics/plot_oil.png")
 ```
 ![image2](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_oil.png?raw=true)
+Sales volume is bigger with a small oil price.
 #### Holidays/events
-
+There is a national (approx. 14), regional and local holidays in Ecuador.
 ```
 plot_holidays <-df_train %>%
   mutate(holidays_fact=ifelse(is.na(locale) | locale!="National","No","Yes")) %>%
@@ -149,11 +150,30 @@ plot_holidays <-df_train %>%
 ggsave("pics/plot_holidays.png")
 ```
 ![image3](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_holidays.png?raw=true)
+Between 2013 and 2017, there was more sales during holidays.
 #### Promotions
 
 ### Periodicity
-Is our data variable seasonal. It is a very important aspect as our data involves time. So we have to control the variables variation in time to see any frequency. 
-####
+Is our data variable seasonal. It is a very important aspect as our data involves time. So we have to control the variables variation in time to see any frequency.
+```
+max_date=max(df_train$date)
+min_date=min(df_train$date)
+
+dat_ts <- df_train %>%
+  # Earth quake filter
+  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
+  select(date,sales) %>%
+  group_by(date) %>%
+  summarise(
+    value=sum(sales,na.rm=TRUE)
+  )
+dat_ts <-ts(dat_ts$value,end=c(year(max_date), month(max_date)),
+            start=c(year(min_date), month(min_date)),
+            frequency = 30)
+# Seasonal Decomposition Plot
+plot(stl(dat_ts,s.window = "periodic"), 
+     main="Seasonal Decomposition of Time Series by Loess")
+```
 
 ## Forecasting
 There is a lot of time series forecasting models,
