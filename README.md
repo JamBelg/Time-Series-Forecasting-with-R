@@ -282,11 +282,11 @@ calibration_table %>%
 
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Accuracy_table.png?raw=true" width="700" height="700">
-The table is in ascending order by MAE.
 Definition of columns:
-- MAE: Mean absolute error
-- MAPE: Mean absolute percentage error
-- MASE: Mean absolute scaled error
-- SMAPE: Symmetric mean absolute percentage error
-- RMSE: Root mean squared error
-RSQ: R-squared
+- MAE: Mean absolute error</br>
+- MAPE: Mean absolute percentage error</br>
+- MASE: Mean absolute scaled error</br>
+- SMAPE: Symmetric mean absolute percentage error</br>
+- RMSE: Root mean squared error</br>
+- RSQ: R-squared</br>
+The table is in ascending order by MAE.
