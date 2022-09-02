@@ -156,49 +156,128 @@ Between 2013 and 2017, there was more sales during holidays.
 ### Periodicity
 Is our data variable seasonal. It is a very important aspect as our data involves time. So we have to control the variables variation in time to see any frequency.
 ```
+# Seasonal decomposition
 max_date=max(df_train$date)
 min_date=min(df_train$date)
 
 dat_ts <- df_train %>%
   # Earth quake filter
   filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
+  
   select(date,sales) %>%
   group_by(date) %>%
   summarise(
     value=sum(sales,na.rm=TRUE)
   )
+
 dat_ts <-ts(dat_ts$value,end=c(year(max_date), month(max_date)),
             start=c(year(min_date), month(min_date)),
             frequency = 30)
+
 # Seasonal Decomposition Plot
+png(file="pics/stl_plot.png",
+    width = 960, height = 960, units = "px", pointsize = 20,
+    bg="azure")
 plot(stl(dat_ts,s.window = "periodic"), 
      main="Seasonal Decomposition of Time Series by Loess")
+dev.off()
+```
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/stl_plot.png?raw=true" width="700" height="700">
+
+# Forecasting
+There is a lot of time series forecasting models,
+## Automatic models
+### ARIMA
+ARIMA is abbreviation of Auto Regressive Integrative Moving Average. It is a combination of a moving average and autoregressive model.
+
+```
+model_fit_arima <- arima_reg() %>%
+  set_engine("auto_arima") %>%
+  fit(value ~ date, training(splits))
 ```
 
-## Forecasting
-There is a lot of time series forecasting models,
-### ARIMA
-ARIMA is ... of auto rgressive integrative moving average. It is a combination of a moving average and autoregressive model.
-
-
-### SARIMA
-S is for Seasonal, it is ARIMA model with seasonal option.
-
-
 ### Prophet
-
+Prophet is open source software developped by Meta and available on R and Python. It is a additive technique that combains trend component, seasonality, holidays and residuals.
+```
+model_fit_prophet <- prophet_reg(seasonality_yearly = TRUE,seasonality_weekly =TRUE) %>%
+  set_engine("prophet",holidays=df_holidays) %>%
+  fit(value ~ date, training(splits))
+```
 
 ### TBATS
-Trigonometric seasonality, Box-Cox transformation, ARMA errors, Trend and Seasonal components
+TBATS is an abbreviation of Trigonometric seasonality, Box-Cox transformation, ARMA errors, Trend and Seasonal components
+```
+model_fit_tbats<-seasonal_reg(mode="regression",
+                              seasonal_period_1= "auto",
+                              seasonal_period_2= "1 year",
+                              seasonal_period_3= "1 month") %>%
+  set_engine("tbats") %>%
+  fit(value ~ date, training(splits))
+```
 
 ### Seasonal Naive
-
-
+```
+model_fit_snaive <- naive_reg(seasonal_period="1 year") %>%
+  set_engine("snaive") %>%
+  fit(value ~ date, training(splits))
+```
+## Machine learning models
 ### Elastic Net
+```
+library(glmnet)
+# 5.1 Set Engine
+model_spec_glmnet <- linear_reg(penalty = 0.01, mixture = 0.5) %>%
+  set_engine("glmnet")
 
+# 5.2 Fit the workflow
+workflow_fit_glmnet <- workflow() %>%
+  add_model(model_spec_glmnet) %>%
+  add_recipe(recipe_spec %>% step_rm(date)) %>%
+  fit(training(splits))
+```
 
 ### Random forest
+```
+library(randomForest)
+# 6.1 Set engine
+model_spec_rf <- rand_forest(mode="regression",trees = 500, min_n = 50) %>%
+  set_engine("randomForest")
 
+# 6.2 Fit workflow
+workflow_fit_rf <- workflow() %>%
+  add_model(model_spec_rf) %>%
+  add_recipe(recipe_spec %>% step_rm(date)) %>%
+  fit(training(splits))
+```
 
 ### Prophet with boost
+```
+model_spec_prophet_boost <- prophet_boost() %>%
+  set_engine("prophet_xgboost") 
+workflow_fit_prophet_boost <- workflow() %>%
+  add_model(model_spec_prophet_boost) %>%
+  add_recipe(recipe_spec) %>%
+  fit(training(splits))
 
+workflow_fit_prophet_boost
+```
+
+
+### Results
+```
+model_table <- modeltime_table(
+  model_fit_arima,
+  model_fit_prophet,
+  model_fit_tbats,
+  model_fit_snaive,
+  workflow_fit_glmnet,
+  workflow_fit_rf,
+  workflow_fit_prophet_boost,
+)
+# Models accuracy
+calibration_table %>%
+  modeltime_accuracy() %>%
+  arrange(mae) %>%
+  table_modeltime_accuracy(.interactive = FALSE)
+
+```
