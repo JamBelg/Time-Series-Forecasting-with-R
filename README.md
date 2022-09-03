@@ -105,7 +105,7 @@ df_train <- left_join(x=df_train, y=df_holidays, by="date")
 df_train <- left_join(x=df_train, y=df_oil, by="date")
 head(df_train,n=20)
 ```
-(Insert table)
+![df_head](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/df_head.png?raw=true)
 
 Daily sales plot
 ```
