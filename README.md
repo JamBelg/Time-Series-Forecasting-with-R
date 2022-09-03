@@ -153,6 +153,22 @@ ggsave("pics/plot_holidays.png")
 Between 2013 and 2017, there was more sales during holidays.
 #### Promotions
 
+```
+# Promotions
+Sales promotions can have a positive effect on business, we can see in the next plot that sales volume was more significant during propmotions.
+Plot_promotions <- df_train %>%
+  group_by(date) %>%
+  summarise(
+    sales=mean(sales,na.rm=TRUE),
+    onprom=sum(onpromotion,na.rm=TRUE)
+  ) %>%
+  mutate(Promotions=ifelse(onprom==0,"No","Yes")) %>%
+  ggplot(aes(x=Promotions,y=sales,fill=Promotions))+geom_boxplot()+
+  labs("Influence of promotions on daily sales",subtitle="Ecuador (2013-2017)")+
+  xlab("Promotions ?")+ylab("Daily sales")
+ggsave("pics/plot_promotions.png")
+```
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_promotions.png?raw=true" width="700" height="700">
 ### Periodicity
 Is our data variable seasonal. It is a very important aspect as our data involves time. So we have to control the variables variation in time to see any frequency.
 ```
@@ -183,6 +199,10 @@ plot(stl(dat_ts,s.window = "periodic"),
 dev.off()
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/stl_plot.png?raw=true" width="700" height="700">
+Our data shows some seasonality, we can decompose the time series into sum of three elements:</br>
+- Seasonal component: yearly as shown on the plot, we can add holidays and propotions in this component</br>
+- Trend component: can be explained by oil price decreasing</br>
+- Remainder component
 
 # Forecasting
 There is a lot of time series forecasting models, we can sort them into three categories:
@@ -209,7 +229,7 @@ model_fit_prophet <- prophet_reg(seasonality_yearly = TRUE,seasonality_weekly =T
 ```
 
 ### TBATS
-TBATS is an abbreviation of Trigonometric seasonality, Box-Cox transformation, ARMA errors, Trend and Seasonal components
+TBATS is an abbreviation of Trigonometric seasonality, Box-Cox transformation, ARMA errors, Trend and Seasonal components. This model offer the possibility to deal with multiple seasonalities.
 ```
 model_fit_tbats<-seasonal_reg(mode="regression",
                               seasonal_period_1= "auto",
