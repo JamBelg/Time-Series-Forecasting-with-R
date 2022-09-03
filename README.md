@@ -168,7 +168,8 @@ Plot_promotions <- df_train %>%
   xlab("Promotions ?")+ylab("Daily sales")
 ggsave("pics/plot_promotions.png")
 ```
-<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_promotions.png?raw=true" width="700" height="700">
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_promotions.png?raw=true" width="500" height="500">
+
 ### Periodicity
 Is our data variable seasonal. It is a very important aspect as our data involves time. So we have to control the variables variation in time to see any frequency.
 ```
@@ -209,6 +210,7 @@ There is a lot of time series forecasting models, we can sort them into three ca
  - Automatic models: are the simplest and the easiest to implement.</br>
  - Machine learning models: are more complex,</br>
  - Boosted models:</br>
+
 ## Automatic models
 Automatic models are the easiest to use.
 ### ARIMA
