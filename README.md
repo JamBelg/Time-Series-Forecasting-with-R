@@ -8,10 +8,8 @@ I have been coding with R and Python since 2015.
 
 
 ## Introduction
-In this tutorial, we will talk about time series forecasting. As mentioned on the title, I will use [R](https://www.rstudio.com/) (or Posit from October 2022).
-Time series forecasting is a prediction technic for data involving time component. The idea is to use historical data to predict the future.
-I will use the data of Store Sales-Time Series Forecasting in Kaggle competition. It is about sales in Ecuador between 2013 and 2017. You can download data from [Kaggle](https://www.kaggle.com/competitions/store-sales-time-series-forecasting/overview) or directly from [my github](https://github.com/JamBelg/Time-Series-Forcasting-with-R).
-Time series forecasting can be applied in various domains such as stock/price prediction or weather prediction.
+Time series forecasting is one of the most requested prediction techniques in business and production. The idea is to use historical data to predict future observations.</br>
+I will use the data of Store Sales-Time Series Forecasting in Kaggle competition. It is about sales in Ecuador between 2013 and 2017. You can download data from [Kaggle](https://www.kaggle.com/competitions/store-sales-time-series-forecasting/overview) or directly from [my github](https://github.com/JamBelg/Time-Series-Forcasting-with-R).</br>
 
 I will use these libraries in this tutorial:
 ```
@@ -36,7 +34,7 @@ library(stringr)
 ## Data analysis
 
 ### Reading
-
+Let's begin by reading the data.
 ```
 df_train=read.csv(file="data/train.csv", 
                   header=TRUE, sep=",", 
@@ -101,6 +99,7 @@ df_train <- left_join(x=df_train, y=df_holidays, by="date")
 df_train <- left_join(x=df_train, y=df_oil, by="date")
 head(df_train,n=20)
 ```
+(Insert table)
 
 Daily sales plot
 ```
@@ -116,7 +115,7 @@ ggsave("pics/plot1.png")
 ```
 ![image1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot1.png?raw=true)
 
-### Correlation
+### Analysis
 #### Oil dependency
 Oil price fluctuation have a big impact on economie, and Ecuador have a high dependency on oil.
 ```
@@ -133,9 +132,10 @@ plot_salesvsoil <-df_train %>%
 ggsave("pics/plot_oil.png")
 ```
 ![image2](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_oil.png?raw=true)
-Sales volume is bigger with a small oil price.
+Blue line is the trend od daily sales versus oil price, sales decreases when oil price rises.
 #### Holidays/events
 There is a national (approx. 14), regional and local holidays in Ecuador.
+If we focus on national holidays, we can see that the average of sales is more important during holidays.
 ```
 plot_holidays <-df_train %>%
   mutate(holidays_fact=ifelse(is.na(locale) | locale!="National","No","Yes")) %>%
