@@ -76,14 +76,17 @@ summary(df_transactions)
 str(df_transactions)
 ```
 ![summary1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_train.png?raw=true)
+</br>
 ![summary2](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_oil.png?raw=true)
+</br>
 ![summary3](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_holidays.png?raw=true)
+</br>
 ![summary4](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_tstores.png?raw=true)
+</br>
 ![summary5](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_transactions.png?raw=true)
 
-We have 43 missing values (NA) in df_oil:</br>
+As you can see, we have missing values in oil dataset:</br>
 ![image1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Oil_NA.jpg?raw=true)
-
 There is a lot of technics to deal with missing value, one of them is simply delete them. In this tutorial I will take the last non NA value to replace the missing values.
 ```
 df_oil$oil_NNA<-df_oil$dcoilwtico
