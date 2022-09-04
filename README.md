@@ -76,18 +76,11 @@ summary(df_transactions)
 str(df_transactions)
 ```
 ![summary1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_train.png?raw=true)
-</br>
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_train.png?raw=true" width="600" height="300">
+</br></br>
 ![summary2](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_oil.png?raw=true)
-</br>
-![summary3](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_holidays.png?raw=true)
-</br>
-![summary4](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_tstores.png?raw=true)
-</br>
-![summary5](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_transactions.png?raw=true)
-
-As you can see, we have missing values in oil dataset:</br>
-![image1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Oil_NA.jpg?raw=true)
-</br>There is a lot of technics to deal with missing value, one of them is simply delete them. In this tutorial I will take the last non NA value to replace the missing values.</br>
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_oil.png?raw=true" width="600" height="300">
+</br></br>In Oil dataset's summary, you can see that it contains some missiong values (NA).There is a lot of technics to deal with missing value, one of them is simply delete them. In this tutorial I will take the last non NA value to replace the missing values.</br>
 ```
 df_oil$oil_NNA<-df_oil$dcoilwtico
 df_oil[1,3]=df_oil[2,3]
@@ -100,6 +93,18 @@ for(i in 2:nrow(df_oil)){
 }
 ```
 
+![summary3](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_holidays.png?raw=true)
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_holidays.png?raw=true" width="600" height="300">
+</br></br>
+![summary4](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_tstores.png?raw=true)
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_tstores.png?raw=true" width="600" height="300">
+</br></br>
+![summary5](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_transactions.png?raw=true)
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_transactions.png?raw=true" width="600" height="300">
+
+
+
+
 Data are separated in 6 csv files, for better understanding I will join them into one table using left join (same logic as SQL left join).
 ```
 df_train <- left_join(x=df_train, y=df_stores, by="store_nbr")
@@ -110,7 +115,10 @@ head(df_train,n=20)
 ```
 ![df_head](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/df_head.png?raw=true)
 
-Daily sales plot
+### Analysis
+
+### Daily sales plot
+Let's focus on daily sales and see the shape of the curve.
 ```
 plot1<-df_train %>%
   group_by(date) %>%
@@ -124,7 +132,6 @@ ggsave("pics/plot1.png")
 ```
 ![image1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot1.png?raw=true)
 
-### Analysis
 #### Oil dependency
 Oil price fluctuation have a big impact on economie, and Ecuador have a high dependency on oil.
 ```
@@ -215,7 +222,7 @@ Our data shows some seasonality, we can decompose the time series into sum of th
 # Forecasting
 There is a lot of time series forecasting models, we can sort them into three categories:
  - Automatic models: are the simplest and the easiest to implement.</br>
- - Machine learning models: are more complex,</br>
+ - Machine learning models: are more complex and the process much more customized,</br>
  - Boosted models:</br>
 
 ## Automatic models
