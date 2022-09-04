@@ -268,8 +268,9 @@ recipe %>%
   juice()
 ```
 </br>
+
 ### Elastic Net
-In this model, we'll fit a generalized linear model with elastic net regularization.</br>
+In this model, we'll fit a generalized linear model with elastic net regularization.
 ```
 library(glmnet)
 engine_glmnet <- linear_reg(penalty = 0.01, mixture = 0.5) %>%
@@ -282,7 +283,7 @@ model_glmnet <- workflow() %>%
 ```
 
 ### Random forest
-Random forest is a supervised learning algorithm for regression and classification.
+Random forest is a supervised learning algorithm for regression and classification. Random Forest operates by constructing several decision trees and outputting the mean of the classes as the prediction of all the trees.
 ```
 engine_rf <- rand_forest(mode="regression",trees = 50, min_n = 5) %>%
   set_engine("randomForest")
@@ -294,7 +295,7 @@ model_rf <- workflow() %>%
 ```
 
 ### Prophet with boost
-
+Now, let's try the prophet model but this time with xgboost (extreme gradient boosting).
 ```
 engine_prophet_boost <- prophet_boost() %>%
   set_engine("prophet_xgboost") 
@@ -305,7 +306,8 @@ workflow_fit_prophet_boost <- workflow() %>%
 ```
 
 
-### Results
+## Results
+Now it's time to test all this models.
 ```
 model_table <- modeltime_table(
   model_fit_arima,
@@ -329,6 +331,7 @@ calibration_table %>%
 
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Accuracy_table.png?raw=true" width="700" height="700">
+
 Definition of columns:</br>
 - MAE: Mean absolute error</br>
 - MAPE: Mean absolute percentage error</br>
@@ -339,7 +342,7 @@ Definition of columns:</br>
 The table is in descending order by RSQ. We can conclude that:
 - Random forest model is the best model
 - Boosted prophet offer a better RSQ
-
+We can see clearly that Random forest is the best model followed by boosted prophet model. Also you can notice the effect of boosting with prophet model.<br/>
 Once the model is selected, we can apply it to predict the future.
 ```
 # 3 months prediction
