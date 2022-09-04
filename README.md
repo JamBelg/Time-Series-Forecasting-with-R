@@ -87,7 +87,7 @@ str(df_transactions)
 
 As you can see, we have missing values in oil dataset:</br>
 ![image1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Oil_NA.jpg?raw=true)
-There is a lot of technics to deal with missing value, one of them is simply delete them. In this tutorial I will take the last non NA value to replace the missing values.
+</br>There is a lot of technics to deal with missing value, one of them is simply delete them. In this tutorial I will take the last non NA value to replace the missing values.</br>
 ```
 df_oil$oil_NNA<-df_oil$dcoilwtico
 df_oil[1,3]=df_oil[2,3]
@@ -100,7 +100,7 @@ for(i in 2:nrow(df_oil)){
 }
 ```
 
-Data are separated in 6 csv files, for better understanding let's join them into one table.
+Data are separated in 6 csv files, for better understanding I will join them into one table using left join (same logic as SQL left join).
 ```
 df_train <- left_join(x=df_train, y=df_stores, by="store_nbr")
 df_train <- left_join(x=df_train, y=df_transactions, by=c("store_nbr","date"))
@@ -141,7 +141,7 @@ plot_salesvsoil <-df_train %>%
 ggsave("pics/plot_oil.png")
 ```
 ![image2](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_oil.png?raw=true)
-Blue line is the trend od daily sales versus oil price, sales decreases when oil price rises.
+</br>Blue line is the trend od daily sales versus oil price, sales decreases when oil price rises.
 #### Holidays/events
 There is a national (approx. 14), regional and local holidays in Ecuador.
 If we focus on national holidays, we can see that the average of sales is more important during holidays.
@@ -159,12 +159,10 @@ plot_holidays <-df_train %>%
 ggsave("pics/plot_holidays.png")
 ```
 ![image3](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_holidays.png?raw=true)
-Between 2013 and 2017, there was more sales during holidays.
 #### Promotions
-
+Sales promotions can have a positive effect on business, we can see in the next plot that sales volume was more significant during propmotions.
 ```
 # Promotions
-Sales promotions can have a positive effect on business, we can see in the next plot that sales volume was more significant during propmotions.
 Plot_promotions <- df_train %>%
   group_by(date) %>%
   summarise(
