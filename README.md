@@ -76,10 +76,8 @@ summary(df_transactions)
 str(df_transactions)
 ```
 ![summary1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_train.png?raw=true)
-<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_train.png?raw=true" width="600" height="300">
 </br></br>
-![summary2](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_oil.png?raw=true)
-<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_oil.png?raw=true" width="600" height="300">
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_oil.png?raw=true" width="692" height="209">
 </br></br>In Oil dataset's summary, you can see that it contains some missiong values (NA).There is a lot of technics to deal with missing value, one of them is simply delete them. In this tutorial I will take the last non NA value to replace the missing values.</br>
 ```
 df_oil$oil_NNA<-df_oil$dcoilwtico
@@ -94,16 +92,10 @@ for(i in 2:nrow(df_oil)){
 ```
 
 ![summary3](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_holidays.png?raw=true)
-<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_holidays.png?raw=true" width="600" height="300">
-</br></br>
-![summary4](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_tstores.png?raw=true)
-<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_tstores.png?raw=true" width="600" height="300">
-</br></br>
-![summary5](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_transactions.png?raw=true)
-<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_transactions.png?raw=true" width="600" height="300">
-
-
-
+</br> </br>
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_tstores.png?raw=true" width="751" height="259">
+</br> </br>
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_transactions.png?raw=true" width="725" height="224">
 
 Data are separated in 6 csv files, for better understanding I will join them into one table using left join (same logic as SQL left join).
 ```
@@ -118,7 +110,6 @@ head(df_train,n=20)
 ### Analysis
 
 ### Daily sales plot
-Let's focus on daily sales and see the shape of the curve.
 ```
 plot1<-df_train %>%
   group_by(date) %>%
@@ -130,7 +121,7 @@ plot1<-df_train %>%
   xlab("Date")+ylab("Sales")
 ggsave("pics/plot1.png")
 ```
-![image1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot1.png?raw=true)
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot1.png?raw=true" width="800" height="700">
 
 #### Oil dependency
 Oil price fluctuation have a big impact on economie, and Ecuador have a high dependency on oil.
@@ -147,8 +138,9 @@ plot_salesvsoil <-df_train %>%
   xlab("Oil Price")+ylab("Daily sales")
 ggsave("pics/plot_oil.png")
 ```
-![image2](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_oil.png?raw=true)
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_oil.png?raw=true" width="714" height="594">
 </br>Blue line is the trend od daily sales versus oil price, sales decreases when oil price rises.
+
 #### Holidays/events
 There is a national (approx. 14), regional and local holidays in Ecuador.
 If we focus on national holidays, we can see that the average of sales is more important during holidays.
@@ -165,7 +157,8 @@ plot_holidays <-df_train %>%
   labs(title="Average sales",subtitle="Ecuador (2013-2017)")+xlab("Holidays ?")+ylab("Average daily sales")
 ggsave("pics/plot_holidays.png")
 ```
-![image3](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_holidays.png?raw=true)
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_holidays.png?raw=true" width="714" height="594">
+
 #### Promotions
 Sales promotions can have a positive effect on business, we can see in the next plot that sales volume was more significant during propmotions.
 ```
@@ -182,7 +175,7 @@ Plot_promotions <- df_train %>%
   xlab("Promotions ?")+ylab("Daily sales")
 ggsave("pics/plot_promotions.png")
 ```
-<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_promotions.png?raw=true" width="500" height="500">
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_promotions.png?raw=true" width="714" height="594">
 
 ### Periodicity
 Is our data variable seasonal. It is a very important aspect as our data involves time. So we have to control the variables variation in time to see any frequency.
@@ -226,7 +219,7 @@ There is a lot of time series forecasting models, we can sort them into three ca
  - Boosted models:</br>
 
 ## Automatic models
-Automatic models are the easiest to use.
+
 ### ARIMA
 ARIMA is abbreviation of Auto Regressive Integrative Moving Average. It is a combination of a moving average and autoregressive model.
 
@@ -316,18 +309,19 @@ workflow_fit_prophet_boost <- workflow() %>%
 ## Results
 Now it's time to test all this models.
 ```
-model_table <- modeltime_table(
-  model_fit_arima,
-  model_fit_prophet,
-  model_fit_tbats,
-  model_fit_snaive,
-  workflow_fit_glmnet,
-  workflow_fit_rf,
-  workflow_fit_prophet_boost,
-)
+models_table <- modeltime_table(
+  model_arima,
+  model_prophet,
+  model_tbats,
+  model_snaive,
+  model_glmnet,
+  model_rf,
+  model_prophet_boost
+) 
 
-# Calibration table
-calibration_table <- model_table %>%
+
+# Calibrate models for accuracy and forecast
+calibration_table <- models_table %>%
   modeltime_calibrate(testing(splits))
 
 # Models accuracy
@@ -335,9 +329,8 @@ calibration_table %>%
   modeltime_accuracy() %>%
   arrange(desc(rsq)) %>%
   table_modeltime_accuracy(.interactive = FALSE)
-
 ```
-<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Accuracy_table.png?raw=true" width="700" height="700">
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracy_plot2.png?raw=true" width="700" height="700">
 
 Definition of columns:</br>
 - MAE: Mean absolute error</br>
