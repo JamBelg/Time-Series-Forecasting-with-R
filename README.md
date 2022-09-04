@@ -330,7 +330,7 @@ calibration_table %>%
   arrange(desc(rsq)) %>%
   table_modeltime_accuracy(.interactive = FALSE)
 ```
-<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracy_plot2.png?raw=true" width="700" height="700">
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable.png?raw=true" width="633" height="427">
 
 Definition of columns:</br>
 - MAE: Mean absolute error</br>
@@ -339,13 +339,14 @@ Definition of columns:</br>
 - SMAPE: Symmetric mean absolute percentage error</br>
 - RMSE: Root mean squared error</br>
 - RSQ: R-squared</br>
-The table is in descending order by RSQ. We can conclude that:
-- Random forest model is the best model
-- Boosted prophet offer a better RSQ
-We can see clearly that Random forest is the best model followed by boosted prophet model. Also you can notice the effect of boosting with prophet model.<br/>
+</br>The table is in descending order by RSQ. We can conclude that:</br>
+- Random forest model is the best model</br>
+- Boosted prophet offer a better RSQ than prophet<br/>
 Once the model is selected, we can apply it to predict the future.
+
 ```
 # 3 months prediction
+## All products
 calibration_table %>%
   # Take Random forest model
   filter(.model_id == 6) %>%
@@ -356,4 +357,8 @@ calibration_table %>%
   plot_modeltime_forecast(.y_lab="Sales",.x_lab="Date",.title="Sales forecasting",
                           .interactive = FALSE,.smooth=TRUE)
 ```
-<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/3m_prediction.png?raw=true" width="717" height="365">
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecasting_51_All.png?raw=true">
+RSQ is relatively good, let's see now the results for some products.
+## MEATS
+
+## PRODUCE
