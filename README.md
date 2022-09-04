@@ -249,50 +249,59 @@ model_fit_tbats<-seasonal_reg(mode="regression",
 ```
 
 ### Seasonal Naive
+Naive method set all forecasts to the value of previous observations, Seasonal Naive methos add seasonal factor.
 ```
-model_fit_snaive <- naive_reg(seasonal_period="1 year") %>%
+model_snaive <- naive_reg() %>%
   set_engine("snaive") %>%
   fit(value ~ date, training(splits))
 ```
 ## Machine learning models
+With machine learning model, I will create a recipe before.</br>
+Recipe is a description of the steps to be applied to our data in order to prepare it for analysis.</br>
+```
+recipe <- recipe(value ~ date, training(splits)) %>%
+  step_timeseries_signature(date) %>%
+  step_fourier(date, period = c(365, 91.25, 30.42), K = 5) %>%
+  step_dummy(all_nominal(),all_predictors())
+recipe %>% 
+  prep() %>%
+  juice()
+```
+</br>
 ### Elastic Net
+In this model, we'll fit a generalized linear model with elastic net regularization.</br>
 ```
 library(glmnet)
-# 5.1 Set Engine
-model_spec_glmnet <- linear_reg(penalty = 0.01, mixture = 0.5) %>%
+engine_glmnet <- linear_reg(penalty = 0.01, mixture = 0.5) %>%
   set_engine("glmnet")
 
-# 5.2 Fit the workflow
-workflow_fit_glmnet <- workflow() %>%
-  add_model(model_spec_glmnet) %>%
-  add_recipe(recipe_spec %>% step_rm(date)) %>%
+model_glmnet <- workflow() %>%
+  add_model(engine_glmnet) %>%
+  add_recipe(recipe %>% step_rm(date)) %>%
   fit(training(splits))
 ```
 
 ### Random forest
+Random forest is a supervised learning algorithm for regression and classification.
 ```
-library(randomForest)
-# 6.1 Set engine
-model_spec_rf <- rand_forest(mode="regression",trees = 500, min_n = 50) %>%
+engine_rf <- rand_forest(mode="regression",trees = 50, min_n = 5) %>%
   set_engine("randomForest")
 
-# 6.2 Fit workflow
-workflow_fit_rf <- workflow() %>%
-  add_model(model_spec_rf) %>%
-  add_recipe(recipe_spec %>% step_rm(date)) %>%
+model_rf <- workflow() %>%
+  add_model(engine_rf) %>%
+  add_recipe(recipe %>% step_rm(date)) %>%
   fit(training(splits))
 ```
 
 ### Prophet with boost
+
 ```
-model_spec_prophet_boost <- prophet_boost() %>%
+engine_prophet_boost <- prophet_boost() %>%
   set_engine("prophet_xgboost") 
 workflow_fit_prophet_boost <- workflow() %>%
   add_model(model_spec_prophet_boost) %>%
   add_recipe(recipe_spec) %>%
   fit(training(splits))
-
-workflow_fit_prophet_boost
 ```
 
 
