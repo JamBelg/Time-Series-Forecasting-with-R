@@ -217,7 +217,17 @@ There is a lot of time series forecasting models, we can sort them into three ca
  - Automatic models: are the simplest and the easiest to implement.</br>
  - Machine learning models: are more complex and the process much more customized,</br>
  - Boosted models:</br>
-
+I will focus on the store number 51:
+```
+# Store_nbr 51
+data<- df_train %>%
+  filter(!grepl("Terremoto", description, fixed = TRUE)) %>%
+  filter(store_nbr==51) %>%
+  group_by(date) %>%
+  summarise(
+    value=mean(sales,na.rm=TRUE)
+  )
+```
 ## Automatic models
 
 ### ARIMA
@@ -339,10 +349,10 @@ Definition of columns:</br>
 - SMAPE: Symmetric mean absolute percentage error</br>
 - RMSE: Root mean squared error</br>
 - RSQ: R-squared</br>
-</br>The table is in descending order by RSQ. We can conclude that:</br>
-- Random forest model is the best model</br>
+</br>The table is in descending order by RSQ. We can see that:</br>
+- Random forest model is the best model with 80%</br>
 - Boosted prophet offer a better RSQ than prophet<br/>
-Once the model is selected, we can apply it to predict the future.
+</br>Once the model is selected, we can apply it to predict the future.
 
 ```
 # 3 months prediction
@@ -362,5 +372,8 @@ RSQ is relatively good, let's see now the results for some products.
 
 ## MEATS
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_MEATS.png?raw=true" width="633" height="427">
-<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecasting_51_MEATS.png?raw=true">
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecatsting_51_MEATS.png?raw=true">
+
 ## PRODUCE
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_PRODUCE.png?raw=true" width="633" height="427">
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecatsting_51_PRODUCE.png?raw=true">
