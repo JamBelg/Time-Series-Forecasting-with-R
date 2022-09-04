@@ -359,6 +359,8 @@ calibration_table %>%
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecasting_51_All.png?raw=true">
 RSQ is relatively good, let's see now the results for some products.
-## MEATS
 
+## MEATS
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_MEATS.png?raw=true" width="633" height="427">
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecasting_51_MEATS.png?raw=true">
 ## PRODUCE
