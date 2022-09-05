@@ -354,7 +354,7 @@ Definition of columns:</br>
 </br>The table is in descending order by RSQ. We can see that:</br>
 - Random forest model is the best model with 80%</br>
 - Boosted prophet offer a better RSQ than prophet<br/>
-</br>Once the model is chosen, we can apply it to make prediction on new data. This is similar to making prediction on test dataset to evaluate the model except that we eill use the modeltime_forecast this time. You can change the period of forecast via the parameter h (3 months in this tutorial).
+</br>Once the model is chosen, we can apply it to make prediction on new data. This is similar to making prediction on test dataset to evaluate the model except that we will use the modeltime_forecast this time. You can change the period of forecast via the parameter h (3 months in this tutorial).
 
 ```
 # 3 months prediction
@@ -370,7 +370,13 @@ calibration_table %>%
                           .interactive = FALSE,.smooth=TRUE)
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecasting_51_All.png?raw=true">
-RSQ is relatively good, let's see now the results for some products.
+RSQ is relatively good, keep in mind that it is sales forecasting for all the products in store 51. To see all the products sold in this store:
+```
+df_train %>%
+  filter(store_nbr==51) %>%
+  distinct(family)
+```
+
 
 ## MEATS
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_MEATS.png?raw=true" width="633" height="427">
