@@ -395,6 +395,10 @@ df_train %>%
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_PRODUCE.png?raw=true" width="633" height="427">
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecatsting_51_PRODUCE.png?raw=true" width="699" height="374">
 
+### Product 3 :BEVERAGES
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_BEVERAGES.png?raw=true" width="633" height="427">
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecatsting_51_BEVERAGES.png?raw=true" width="699" height="374">
+
 ### Summary
 We have a better results if we forecast product by product.</br>
 For the two previous products, Random Forest model is confirmed as the best forecasting model.
