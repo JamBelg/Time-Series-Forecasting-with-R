@@ -387,6 +387,11 @@ df_train %>%
 ## PRODUCE
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_PRODUCE.png?raw=true" width="633" height="427">
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecatsting_51_PRODUCE.png?raw=true" width="699" height="374">
-We have a better results if we forecast product by product. For the two previous products, Random Forest model is confirmed as the best forecasting model.
 
-# Summary
+## Summary
+We have a better results if we forecast product by product.</br>
+For the two previous products, Random Forest model is confirmed as the best forecasting model.
+
+# Further reading
+- [Getting Started with Modeltime](https://cran.r-project.org/web/packages/modeltime/vignettes/getting-started-with-modeltime.html)
+- [11 Classical Time Series Forecasting Methods in Python (Cheat Sheet)](https://machinelearningmastery.com/time-series-forecasting-methods-in-python-cheat-sheet/) by Jason Brownlee
