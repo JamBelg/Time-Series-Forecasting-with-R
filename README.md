@@ -370,14 +370,16 @@ calibration_table %>%
                           .interactive = FALSE,.smooth=TRUE)
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecasting_51_All.png?raw=true">
-RSQ is relatively good, keep in mind that it is sales forecasting for all the products in store 51. To see all the products sold in this store:
+
+RSQ is relatively good, keep in mind that it is sales forecasting for all the products in store 51.</br>
+To see all the products sold in this store:
 ```
 df_train %>%
   filter(store_nbr==51) %>%
   distinct(family)
 ```
-
-
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/store51_products.jpg?raw=true" width="335" height="737">
+Let's t
 ## MEATS
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_MEATS.png?raw=true" width="633" height="427">
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecatsting_51_MEATS.png?raw=true">
