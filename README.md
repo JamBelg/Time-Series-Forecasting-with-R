@@ -400,5 +400,8 @@ We have a better results if we forecast product by product.</br>
 For the two previous products, Random Forest model is confirmed as the best forecasting model.
 
 # Further reading
+- [Forecasting: Principles and Practice](https://otexts.com/fpp2/) by Rob J Hyndman and George Athanasopoulos
 - [Getting Started with Modeltime](https://cran.r-project.org/web/packages/modeltime/vignettes/getting-started-with-modeltime.html)
 - [11 Classical Time Series Forecasting Methods in Python (Cheat Sheet)](https://machinelearningmastery.com/time-series-forecasting-methods-in-python-cheat-sheet/) by Jason Brownlee
+- [XGBoost: Extreme Gradient Boosting — How to Improve on Regular Gradient Boosting?](https://towardsdatascience.com/xgboost-extreme-gradient-boosting-how-to-improve-on-regular-gradient-boosting-5c6acf66c70a) by Saul Dobilas
+- 
