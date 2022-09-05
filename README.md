@@ -359,6 +359,9 @@ Definition of columns:</br>
 </br>The table is in descending order by RSQ. We can see that:</br>
 - Random forest model is the best model with 80%</br>
 - Boosted prophet offer a better RSQ than prophet<br/>
+
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/models_test.png?raw=true" width="633" height="414">
+
 </br>Once the model is chosen, we can apply it to make prediction on new data. This is similar to making prediction on test dataset to evaluate the model except that we will use the modeltime_forecast this time. You can change the period of forecast via the parameter h (3 months in this tutorial).
 
 ```
