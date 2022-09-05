@@ -356,7 +356,7 @@ Definition of columns:</br>
 - RMSE: Root mean squared error</br>
 - RSQ: R-squared</br>
 </br>The table is in descending order by RSQ. We can see that:</br>
-- Random forest model is the best model with 80%</br>
+- Random forest model is the best model with 81%</br>
 - Boosted prophet offer a better RSQ than prophet<br/>
 
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/models_test.png?raw=true" width="633" height="414">
