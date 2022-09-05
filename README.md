@@ -217,7 +217,7 @@ Our data shows some seasonality, we can decompose the time series into sum of th
 There is a lot of time series forecasting models, we can sort them into three categories:
  - Automatic models: are the simplest and the easiest to implement.</br>
  - Machine learning models: are more complex and the process much more customized,</br>
- - Boosted models: ising booster add efficiency and rapidity</br>
+ - Boosted models: using XGBoost(Extreme Gradient Boosting)</br>
  
 </br>I will focus on the store number 51:
 
