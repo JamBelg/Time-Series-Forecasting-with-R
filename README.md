@@ -8,7 +8,7 @@ I have been coding with R and Python since 2015.
 
 
 ## Introduction
-Time series forecasting is one of the most requested prediction techniques in business and production. The idea is to use historical data to predict future observations.</br>
+Time series forecasting is one of the most important prediction techniques in business and production. The idea is to use historical data to predict future observations.</br>
 I will use the data of Store Sales-Time Series Forecasting in Kaggle competition. It is about sales in Ecuador between 2013 and 2017. You can download data from [Kaggle](https://www.kaggle.com/competitions/store-sales-time-series-forecasting/overview) or directly from [my github](https://github.com/JamBelg/Time-Series-Forcasting-with-R).</br>
 
 I will use these libraries in this tutorial:
@@ -34,7 +34,7 @@ library(stringr)
 ## Data analysis
 
 ### Reading
-Let's begin by reading the data.
+Let's begin by reading the csv files.
 ```
 df_train=read.csv(file="data/train.csv", 
                   header=TRUE, sep=",", 
@@ -78,7 +78,7 @@ str(df_transactions)
 ![summary1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_train.png?raw=true)
 </br></br>
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_oil.png?raw=true" width="692" height="209">
-</br></br>In Oil dataset's summary, you can see that it contains some missiong values (NA).There is a lot of technics to deal with missing value, one of them is simply delete them. In this tutorial I will take the last non NA value to replace the missing values.</br>
+</br></br>In Oil dataset's summary, you can see that it contains some missing values (NA).There is a lot of technics to deal with missing value, one of them is simply delete them. In this tutorial I will take the last non NA value to replace the missing values.</br>
 ```
 df_oil$oil_NNA<-df_oil$dcoilwtico
 df_oil[1,3]=df_oil[2,3]
@@ -139,7 +139,7 @@ plot_salesvsoil <-df_train %>%
 ggsave("pics/plot_oil.png")
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_oil.png?raw=true" width="714" height="594">
-</br>Blue line is the trend od daily sales versus oil price, sales decreases when oil price rises.
+</br>Blue line is the trend of daily sales versus oil price, sales decreases when oil price rises.
 
 #### Holidays/events
 There is a national (approx. 14), regional and local holidays in Ecuador.
@@ -160,7 +160,7 @@ ggsave("pics/plot_holidays.png")
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_holidays.png?raw=true" width="714" height="594">
 
 #### Promotions
-Sales promotions can have a positive effect on business, we can see in the next plot that sales volume was more significant during propmotions.
+Sales promotions can have a positive effect on business, we can see in the next plot that sales volume was more significant during promotions.
 ```
 # Promotions
 Plot_promotions <- df_train %>%
@@ -178,7 +178,8 @@ ggsave("pics/plot_promotions.png")
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_promotions.png?raw=true" width="714" height="594">
 
 ### Periodicity
-Is our data variable seasonal. It is a very important aspect as our data involves time. So we have to control the variables variation in time to see any frequency.
+Is our data variable seasonal. It is a very important aspect as our data involves time. So we have to control the sales variation in time to see any frequency.
+To do that, we can use stl function (Seasonal Decomposition of Time Series by Loess).
 ```
 # Seasonal decomposition
 max_date=max(df_train$date)
@@ -216,8 +217,10 @@ Our data shows some seasonality, we can decompose the time series into sum of th
 There is a lot of time series forecasting models, we can sort them into three categories:
  - Automatic models: are the simplest and the easiest to implement.</br>
  - Machine learning models: are more complex and the process much more customized,</br>
- - Boosted models:</br>
-I will focus on the store number 51:
+ - Boosted models: ising booster add efficiency and rapidity</br>
+ 
+</br>I will focus on the store number 51:
+
 ```
 # Store_nbr 51
 data<- df_train %>%
@@ -232,7 +235,6 @@ data<- df_train %>%
 
 ### ARIMA
 ARIMA is abbreviation of Auto Regressive Integrative Moving Average. It is a combination of a moving average and autoregressive model.
-
 ```
 model_fit_arima <- arima_reg() %>%
   set_engine("auto_arima") %>%
@@ -317,7 +319,7 @@ workflow_fit_prophet_boost <- workflow() %>%
 
 
 ## Results
-Now it's time to test all this models.
+Now it's time to test all this models on test data. To compare all the models, we can regroup them into one table using modeltime_table function.
 ```
 models_table <- modeltime_table(
   model_arima,
