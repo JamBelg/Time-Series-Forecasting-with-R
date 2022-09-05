@@ -379,11 +379,14 @@ df_train %>%
   distinct(family)
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/store51_products.jpg?raw=true" width="335" height="737">
-Let's t
+
 ## MEATS
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_MEATS.png?raw=true" width="633" height="427">
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecatsting_51_MEATS.png?raw=true">
+We have a better results if we focus on METAS product, RSQ=92%
 
 ## PRODUCE
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_PRODUCE.png?raw=true" width="633" height="427">
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecatsting_51_PRODUCE.png?raw=true">
+
+# Conclusion
