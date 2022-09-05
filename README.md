@@ -222,6 +222,20 @@ data<- df_train %>%
     value=mean(sales,na.rm=TRUE)
   )
 ```
+
+Next step, I will split my data in two using time_series_split:</br>
+- training(splits) (training set) </br>
+- testing(splits) (testing set last three months)</br>
+```
+splits <- data %>%
+  time_series_split(assess = "3 months", cumulative = TRUE)
+
+splits %>%
+  tk_time_series_cv_plan() %>%
+  plot_time_series_cv_plan(date, value, .interactive = FALSE)
+```
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Split_plot.png?raw=true" width="633" height="414">
+
 ## Automatic models
 
 ### ARIMA
