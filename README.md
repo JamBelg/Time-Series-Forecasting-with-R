@@ -337,12 +337,10 @@ models_table <- modeltime_table(
 ) 
 
 
-# Calibrate models for accuracy and forecast
-calibration_table <- models_table %>%
+calib_table <- models_table %>%
   modeltime_calibrate(testing(splits))
 
-# Models accuracy
-calibration_table %>%
+calib_table %>%
   modeltime_accuracy() %>%
   arrange(desc(rsq)) %>%
   table_modeltime_accuracy(.interactive = FALSE)
@@ -368,15 +366,15 @@ Definition of columns:</br>
 ```
 # 3 months prediction
 ## All products
-calibration_table %>%
+calib_table %>%
   # Take Random forest model
   filter(.model_id == 6) %>%
-  
-  # Refit and Forecast Forward
+  # Refit
   modeltime_refit(data) %>%
-  modeltime_forecast(h = "3 month", actual_data = tail(data,100)) %>%
-  plot_modeltime_forecast(.y_lab="Sales",.x_lab="Date",.title="Sales forecasting",
-                          .interactive = FALSE,.smooth=TRUE)
+  modeltime_forecast(h = "3 month", actual_data = tail(data,600)) %>%
+  plot_modeltime_forecast(.y_lab="Sales",.x_lab="Date",
+                          .title="Sales forecasting-Sales_nbr 51-All products",
+                          .interactive = FALSE,.smooth=FALSE)
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecasting_51_All.png?raw=true">
 
