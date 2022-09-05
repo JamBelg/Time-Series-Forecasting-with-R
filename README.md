@@ -347,6 +347,7 @@ calibration_table %>%
   arrange(desc(rsq)) %>%
   table_modeltime_accuracy(.interactive = FALSE)
 ```
+### All products
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable.png?raw=true" width="633" height="427">
 
 Definition of columns:</br>
@@ -388,15 +389,15 @@ df_train %>%
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/store51_products.jpg?raw=true" width="335" height="737">
 
-## MEATS
+### Product 1 :MEATS
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_MEATS.png?raw=true" width="633" height="427">
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecatsting_51_MEATS.png?raw=true" width="699" height="374">
 
-## PRODUCE
+### Product 2 :PRODUCE
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_PRODUCE.png?raw=true" width="633" height="427">
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecatsting_51_PRODUCE.png?raw=true" width="699" height="374">
 
-## Summary
+### Summary
 We have a better results if we forecast product by product.</br>
 For the two previous products, Random Forest model is confirmed as the best forecasting model.
 
