@@ -13,22 +13,13 @@ I will use the data of Store Sales-Time Series Forecasting in Kaggle competition
 
 I will use these libraries in this tutorial:
 ```
-library(dplyr)
-library(ggplot2)
-library(forecast)
-library(stats)
-library(TTR)
-library(tseries)
-library(astsa)
-library(MLmetrics)
-library(zoo)
-library(scales)
 library(tidymodels)
 library(modeltime)
-library(timetk)   
-library(tidyverse)
+library(tseries)
+library(stats)
+library(zoo)
 library(lubridate)
-library(stringr)
+library(timetk)
 ```
 
 ## Data analysis
