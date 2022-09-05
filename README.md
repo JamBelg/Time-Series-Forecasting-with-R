@@ -354,7 +354,7 @@ Definition of columns:</br>
 </br>The table is in descending order by RSQ. We can see that:</br>
 - Random forest model is the best model with 80%</br>
 - Boosted prophet offer a better RSQ than prophet<br/>
-</br>Once the model is selected, we can apply it to predict the future.
+</br>Once the model is chosen, we can apply it to make prediction on new data. This is similar to making prediction on test dataset to evaluate the model except that we eill use the modeltime_forecast this time. You can change the period of forecast via the parameter h (3 months in this tutorial).
 
 ```
 # 3 months prediction
