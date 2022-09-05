@@ -387,21 +387,21 @@ df_train %>%
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/store51_products.jpg?raw=true" width="335" height="737">
 
-### Product 1 :MEATS
+### Product 1: MEATS
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_MEATS.png?raw=true" width="633" height="427">
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecatsting_51_MEATS.png?raw=true" width="699" height="374">
 
-### Product 2 :PRODUCE
+### Product 2: PRODUCE
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_PRODUCE.png?raw=true" width="633" height="427">
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecatsting_51_PRODUCE.png?raw=true" width="699" height="374">
 
-### Product 3 :BEVERAGES
+### Product 3: BEVERAGES
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_BEVERAGES.png?raw=true" width="633" height="427">
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecatsting_51_BEVERAGES.png?raw=true" width="699" height="374">
 
 ### Summary
 We have a better results if we forecast product by product.</br>
-For the two previous products, Random Forest model is confirmed as the best forecasting model.
+For the three previous products, Random Forest model is confirmed as the best forecasting model.
 
 # Further reading
 - [Forecasting: Principles and Practice](https://otexts.com/fpp2/) by Rob J Hyndman and George Athanasopoulos
