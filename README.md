@@ -362,7 +362,7 @@ Definition of columns:</br>
 
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/models_test.png?raw=true" width="633" height="414">
 
-</br>Once the model is chosen, we can apply it to make prediction on new data. This is similar to making prediction on test dataset to evaluate the model except that we will use the modeltime_forecast this time. You can change the period of forecast via the parameter h (3 months in this tutorial).
+</br>Once the model is chosen, we can apply it to make prediction on new data. This is similar to making prediction on test dataset to evaluate the model except that we need to refit our model this time using all the dataset (training+testing). You can change the period of forecast via the parameter h (3 months in this tutorial).
 
 ```
 # 3 months prediction
