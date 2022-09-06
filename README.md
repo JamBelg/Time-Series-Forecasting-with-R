@@ -2,10 +2,10 @@
 with Kaggle data
 
 ## About me
-#### Jamel Belgacem
-#### [LinkedIn](https://www.linkedin.com/in/jamel-belgacem-289606a7/)
-#### Application Engineer, R&Python developper
-I have been coding with R and Python since 2015.
+#### Jamel Belgacem <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/1486053613-linkedin_79186.png?raw=true" width="20" height="20"> [LinkedIn](https://www.linkedin.com/in/jamel-belgacem-289606a7/)
+##### R | Python | SQL
+I am an Application Engineer with a passion for data analysis and machine learning.
+
 
 
 ## Introduction
@@ -203,7 +203,7 @@ dev.off()
 Our data shows some seasonality, we can decompose the time series into sum of three elements:</br>
 - Seasonal component: yearly as shown on the plot, we can add holidays and propotions in this component</br>
 - Trend component: can be explained by oil price decreasing</br>
-- Remainder component
+- Remainder component: residuals form seasonal and trend components</br>
 
 # Forecasting
 There is a lot of time series forecasting models, we can sort them into three categories:
@@ -356,7 +356,8 @@ Definition of columns:</br>
 - SMAPE: Symmetric mean absolute percentage error</br>
 - RMSE: Root mean squared error</br>
 - RSQ: R-squared</br>
-</br>The table is in descending order by RSQ. We can see that:</br>
+
+The table is in descending order by RSQ. We can see that:</br>
 - Random forest model is the best model with 81%</br>
 - Boosted prophet offer a better RSQ than prophet<br/>
 
