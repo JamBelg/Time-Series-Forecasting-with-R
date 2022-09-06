@@ -2,7 +2,8 @@
 with Kaggle data
 
 ## About me
-#### [Jamel Belgacem](https://www.linkedin.com/in/jamel-belgacem-289606a7/)
+#### Jamel Belgacem
+#### [LinkedIn](https://www.linkedin.com/in/jamel-belgacem-289606a7/)
 #### Application Engineer, R&Python developper
 I have been coding with R and Python since 2015.
 
