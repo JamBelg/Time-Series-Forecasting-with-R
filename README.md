@@ -1,4 +1,4 @@
-# Time-Series-Forcasting-with-R
+# Time-Series-Forecasting-with-R
 with Kaggle data
 
 ## About me
@@ -54,7 +54,7 @@ df_transactions = read.csv(file="data/transactions.csv",
 ```
 
 ### Summary
-Before jumping into model creation, it is always good to take a look into data.
+Before jumping into model creation, it is always good to take a look into our data.
 ```
 summary(df_train)
 str(df_train)
@@ -70,7 +70,7 @@ str(df_transactions)
 ![summary1](https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_train.png?raw=true)
 </br></br>
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/summary_oil.png?raw=true" width="692" height="209">
-</br></br>In Oil dataset's summary, you can see that it contains some missing values (NA).There is a lot of technics to deal with missing value, one of them is simply delete them. In this tutorial I will take the last non NA value to replace the missing values.</br>
+</br></br>In Oil dataset's summary, you can see that it contains some missing values (NA).There is a lot of technics to deal with NA, one of them is simply delete them. In this tutorial I will take the last non NA value to replace the missing values.</br>
 ```
 df_oil$oil_NNA<-df_oil$dcoilwtico
 df_oil[1,3]=df_oil[2,3]
