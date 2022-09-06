@@ -117,7 +117,7 @@ ggsave("pics/plot1.png")
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot1.png?raw=true" width="800" height="700">
 
 #### Oil dependency
-Oil price fluctuation have a big impact on economie, and Ecuador have a high dependency on oil.
+Oil price fluctuation have a big impact on economy, and Ecuador has a high dependency on oil.
 ```
 plot_salesvsoil <-df_train %>%
   group_by(date) %>%
@@ -202,7 +202,7 @@ dev.off()
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/stl_plot.png?raw=true" width="700" height="700">
 Our data shows some seasonality, we can decompose it into sum of three elements:</br>
-- Seasonal component: yearly as shown on the plot, we can add holidays and propotions in this component</br>
+- Seasonal component: yearly as shown on the plot, we can add holidays and promotions in this component</br>
 - Trend component: can be explained by oil price decreasing</br>
 - Remainder component: residuals form seasonal and trend components</br>
 
@@ -249,7 +249,7 @@ model_fit_arima <- arima_reg() %>%
 ```
 
 ### Prophet
-Prophet is open source software developped by Meta and available on R and Python. It is a additive technique that combains trend component, seasonality, holidays and residuals.
+Prophet is open-source software developed by Meta and available on R and Python. It is a additive technique that combines trend component, seasonality, holidays and residuals.
 ```
 model_fit_prophet <- prophet_reg(seasonality_yearly = TRUE,seasonality_weekly =TRUE) %>%
   set_engine("prophet",holidays=df_holidays) %>%
@@ -257,7 +257,7 @@ model_fit_prophet <- prophet_reg(seasonality_yearly = TRUE,seasonality_weekly =T
 ```
 
 ### TBATS
-TBATS is an abbreviation of Trigonometric seasonality, Box-Cox transformation, ARMA errors, Trend and Seasonal components. This model offer the possibility to deal with multiple seasonalities.
+TBATS is an abbreviation of Trigonometric seasonality, Box-Cox transformation, ARMA errors, Trend and Seasonal components. This model offers the possibility to deal with multiple seasonality.
 ```
 model_fit_tbats<-seasonal_reg(mode="regression",
                               seasonal_period_1= "auto",
@@ -275,7 +275,7 @@ model_snaive <- naive_reg() %>%
   fit(value ~ date, training(splits))
 ```
 ## Machine learning models
-With machine learning model, I will create a recipe before.</br>
+With machine learning model, we can create a recipe before.</br>
 Recipe is a description of the steps to be applied to our data in order to prepare it for analysis.</br>
 ```
 recipe <- recipe(value ~ date, training(splits)) %>%
