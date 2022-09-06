@@ -1,4 +1,4 @@
-# Time-Series-Forecasting-with-R
+# Time Series Forecasting with R
 with Kaggle data
 
 ## About me
