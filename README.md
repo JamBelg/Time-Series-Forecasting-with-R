@@ -102,6 +102,7 @@ head(df_train,n=20)
 ### Analysis
 
 ### Daily sales plot
+Sales in Ecuador increased between 2013 and 2017 (almost twice as much as in 2013). We notice sales peaks in the end of each year.
 ```
 plot1<-df_train %>%
   group_by(date) %>%
@@ -131,7 +132,7 @@ plot_salesvsoil <-df_train %>%
 ggsave("pics/plot_oil.png")
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_oil.png?raw=true" width="714" height="594">
-</br>Blue line is the trend of daily sales versus oil price, sales decreases when oil price rises.
+</br>Blue line is the trend of daily sales versus oil price, sales have decreased with the increase of oil price.
 
 #### Holidays/events
 There is a national (approx. 14), regional and local holidays in Ecuador.
