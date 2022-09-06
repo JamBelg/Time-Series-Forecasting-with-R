@@ -171,7 +171,7 @@ ggsave("pics/plot_promotions.png")
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_promotions.png?raw=true" width="714" height="594">
 
 ### Periodicity
-Is our data variable seasonal. It is a very important aspect as our data involves time. So we have to control the sales variation in time to see any frequency.
+Is our data variable seasonal. It is a very important aspect as our data involves time. We have to look into the sales variation in time to see any frequency.</br>
 To do that, we can use stl function (Seasonal Decomposition of Time Series by Loess).
 ```
 # Seasonal decomposition
@@ -201,7 +201,7 @@ plot(stl(dat_ts,s.window = "periodic"),
 dev.off()
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/stl_plot.png?raw=true" width="700" height="700">
-Our data shows some seasonality, we can decompose the time series into sum of three elements:</br>
+Our data shows some seasonality, we can decompose it into sum of three elements:</br>
 - Seasonal component: yearly as shown on the plot, we can add holidays and propotions in this component</br>
 - Trend component: can be explained by oil price decreasing</br>
 - Remainder component: residuals form seasonal and trend components</br>
@@ -313,7 +313,7 @@ model_rf <- workflow() %>%
   fit(training(splits))
 ```
 
-### Prophet with boost
+## Prophet with boost
 Now, let's try the prophet model but this time with xgboost (extreme gradient boosting).
 ```
 engine_prophet_boost <- prophet_boost() %>%
@@ -382,13 +382,14 @@ calib_table %>%
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Sales_forecasting_51_All.png?raw=true">
 
 RSQ is relatively good, keep in mind that it is sales forecasting for all the products in store 51.</br>
-To see all the products sold in this store:
+To see all the products for sale in the store:
 ```
 df_train %>%
   filter(store_nbr==51) %>%
   distinct(family)
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/store51_products.jpg?raw=true" width="335" height="737">
+Now let's see the forecasting for some products.
 
 ### Product 1: MEATS
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/accuracytable_MEATS.png?raw=true" width="633" height="427">
