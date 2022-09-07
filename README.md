@@ -227,7 +227,7 @@ data<- df_train %>%
 
 Next step, I will split my data in two using time_series_split:</br>
 - training(splits) (training set) </br>
-- testing(splits) (testing set last three months)</br>
+- testing(splits) (last three months as testing set)</br>
 ```
 splits <- data %>%
   time_series_split(assess = "3 months", cumulative = TRUE)
