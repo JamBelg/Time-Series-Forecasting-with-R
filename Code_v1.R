@@ -1,8 +1,6 @@
 # Remove objects
 rm(list=ls())
-# setwd("/Users/Shared/Dev Jamel/Store Sales - Time Series Forecasting")
-# setwd("C:/tmp/Store Sales - Time Series Forecasting")
-setwd("U:/R scripts/Project_Directory/Kaggle/Store Sales - Time Series Forecasting")
+setwd("/Users/Shared/Dev Jamel/Store Sales - Time Series Forecasting")
 
 # Load libraries
 library(tidymodels)
@@ -14,12 +12,6 @@ library(lubridate)
 library(timetk)
 
 
-
-# Add link to github (make it public)
-# temp <- tempfile()
-# download.file("http://www.newcl.org/data/zipfiles/a1.zip",temp)
-# data <- read.table(unz(temp, "a1.dat"))
-# unlink(temp)
 
 
 # Read datasets
