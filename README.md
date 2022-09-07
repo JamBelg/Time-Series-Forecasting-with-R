@@ -171,7 +171,7 @@ ggsave("pics/plot_promotions.png")
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_promotions.png?raw=true" width="714" height="594">
 
 ### Periodicity
-Is our data variable seasonal. It is a very important aspect as our data involves time. We have to look into the sales variation in time to see any frequency.</br>
+Is our data changes periodically. It is a very important aspect as our data involves time. We have to look into the sales variation in time to see any frequency.</br>
 To do that, we can use stl function (Seasonal Decomposition of Time Series by Loess).
 ```
 # Seasonal decomposition
