@@ -135,8 +135,8 @@ ggsave("pics/plot_oil.png")
 </br>Blue line is the trend of daily sales versus oil price, sales have decreased with the increase of oil price.
 
 #### Holidays/events
-There is national (approx. 14), regional and local holidays in Ecuador.
-If we focus on national holidays, we can see that the average of sales is more important during holidays.
+There are national (approx. 14), regional and local holidays in Ecuador.
+If we focus on national holidays, we can see that the sales volume is more important during holidays.
 ```
 plot_holidays <-df_train %>%
   mutate(holidays_fact=ifelse(is.na(locale) | locale!="National","No","Yes")) %>%
