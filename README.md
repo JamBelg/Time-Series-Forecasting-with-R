@@ -275,7 +275,7 @@ model_snaive <- naive_reg() %>%
   fit(value ~ date, training(splits))
 ```
 ## Machine learning models
-With machine learning model, we can create a recipe before.</br>
+With machine learning model, we create a recipe.</br>
 Recipe is a description of the steps to be applied to our data in order to prepare it for analysis.</br>
 ```
 recipe <- recipe(value ~ date, training(splits)) %>%
