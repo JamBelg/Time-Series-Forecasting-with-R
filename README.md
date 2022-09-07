@@ -1,18 +1,18 @@
-# Time Series Forecasting with R
-with Kaggle data
+# Time Series Forecasting with R (with Kaggle data)
 
 ## About me
-#### Jamel Belgacem <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/1486053613-linkedin_79186.png?raw=true" width="20" height="20"> [LinkedIn](https://www.linkedin.com/in/jamel-belgacem-289606a7/)
-##### R | Python | SQL
-I am an Application Engineer with a passion for data analysis and machine learning.
+Jamel Belgacem <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/1486053613-linkedin_79186.png?raw=true" width="20" height="20"> [LinkedIn](https://www.linkedin.com/in/jamel-belgacem-289606a7/)
+R | Python | SQL
+> I am an Application Engineer with a passion for data analysis and machine learning.
 
 
 
 ## Introduction
-Time series forecasting is one of the most important prediction techniques in business and production. The idea is to use historical data to predict future observations.</br>
-I will use the data of Store Sales-Time Series Forecasting in Kaggle competition. It is about sales in Ecuador between 2013 and 2017. You can download it from [Kaggle](https://www.kaggle.com/competitions/store-sales-time-series-forecasting/overview) or directly from [my github](https://github.com/JamBelg/Time-Series-Forecasting-with-R).</br>
+Time series forecasting is one of the most important prediction techniques in business. The idea is to use historical data to predict future observations.
 
-I will use these libraries in this tutorial:
+I will use the data of Store Sales-Time Series Forecasting in Kaggle competition. It is about sales in Ecuador between 2013 and 2017. You can download it from [Kaggle](https://www.kaggle.com/competitions/store-sales-time-series-forecasting/overview) or by cloning this repo.
+
+I will use these libraries in this project:
 ```
 library(tidymodels)
 library(modeltime)
@@ -54,6 +54,7 @@ df_transactions = read.csv(file="data/transactions.csv",
 ```
 
 ### Summary
+
 Before jumping into model creation, it is always good to take a look into our data.
 ```
 summary(df_train)
@@ -153,7 +154,9 @@ ggsave("pics/plot_holidays.png")
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_holidays.png?raw=true" width="714" height="594">
 
 #### Promotions
-Sales promotions can have a positive effect on business, we can see in the next plot that sales volume was more significant during promotions.
+
+Sales promotions can have a positive effect on business, we can see it in the next plot that sales volume was more significant during promotions.
+
 ```
 # Promotions
 Plot_promotions <- df_train %>%
@@ -171,8 +174,9 @@ ggsave("pics/plot_promotions.png")
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_promotions.png?raw=true" width="714" height="594">
 
 ### Periodicity
+
 Is our data changes periodically. It is a very important aspect as our data involves time. We have to look into the sales variation in time to see any frequency.</br>
-To do that, we can use stl function (Seasonal Decomposition of Time Series by Loess).
+To do that, we can use `stl function` (Seasonal Decomposition of Time Series by Loess).
 ```
 # Seasonal decomposition
 max_date=max(df_train$date)
