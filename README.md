@@ -102,7 +102,7 @@ head(df_train,n=20)
 ### Analysis
 
 ### Daily sales plot
-Sales in Ecuador increased between 2013 and 2017 (almost twice as much as in 2013). We notice sales peaks in the end of each year.
+Sales in Ecuador increased between 2013 and 2017 (in 2017 almost twice as much as in 2013). We notice sales peaks in the end of each year.
 ```
 plot1<-df_train %>%
   group_by(date) %>%
