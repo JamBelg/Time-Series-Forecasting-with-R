@@ -10,7 +10,7 @@ I am an Application Engineer with a passion for data analysis and machine learni
 
 ## Introduction
 Time series forecasting is one of the most important prediction techniques in business and production. The idea is to use historical data to predict future observations.</br>
-I will use the data of Store Sales-Time Series Forecasting in Kaggle competition. It is about sales in Ecuador between 2013 and 2017. You can download it from [Kaggle](https://www.kaggle.com/competitions/store-sales-time-series-forecasting/overview) or directly from [my github](https://github.com/JamBelg/Time-Series-Forcasting-with-R/data).</br>
+I will use the data of Store Sales-Time Series Forecasting in Kaggle competition. It is about sales in Ecuador between 2013 and 2017. You can download it from [Kaggle](https://www.kaggle.com/competitions/store-sales-time-series-forecasting/overview) or directly from [my github](https://github.com/JamBelg/Time-Series-Forecasting-with-R).</br>
 
 I will use these libraries in this tutorial:
 ```
