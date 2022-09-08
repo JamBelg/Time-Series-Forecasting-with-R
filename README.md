@@ -1,8 +1,8 @@
 # Time Series Forecasting with R (with Kaggle data)
 
 ## About me
-Jamel Belgacem <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/1486053613-linkedin_79186.png?raw=true" width="20" height="20"> [LinkedIn](https://www.linkedin.com/in/jamel-belgacem-289606a7/)
-R | Python | SQL
+Jamel Belgacem <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/1486053613-linkedin_79186.png?raw=true" width="20" height="20"> [LinkedIn](https://www.linkedin.com/in/jamel-belgacem-289606a7/)</br>
+> R | Python | SQL | Java</br>
 > I am an Application Engineer with a passion for data analysis and machine learning.
 
 
