@@ -210,7 +210,7 @@ Our data shows some seasonality, we can decompose it into sum of three elements:
 - Trend component: can be explained by oil price decreasing</br>
 - Remainder component: residuals form seasonal and trend components</br>
 
-We can use also the Dickey-Fuller test:
+Also, We can use the Dickey-Fuller test to check the stationarity.
 ```
 # Augmented Dickey-Fuller(ADF) Test
 # p-value <0.05 -> data is "stationary"
