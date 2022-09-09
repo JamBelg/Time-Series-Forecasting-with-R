@@ -173,9 +173,9 @@ ggsave("pics/plot_promotions.png")
 ```
 <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/plot_promotions.png?raw=true" width="714" height="594">
 
-### Periodicity
+### Stationarity
 
-Is our data changes periodically. It is a very important aspect as our data involves time. We have to look into the sales variation in time to see any frequency.</br>
+Is our data stationary. It is a very important aspect as our data involves time, it is important that the bahavior of our data (mean, variance) remains constant to predict the futur. We have to look into the sales variation in time to see any frequency.</br>
 To do that, we can use `stl function` (Seasonal Decomposition of Time Series by Loess).
 ```
 # Seasonal decomposition
@@ -209,6 +209,15 @@ Our data shows some seasonality, we can decompose it into sum of three elements:
 - Seasonal component: yearly as shown on the plot, we can add holidays and promotions in this component</br>
 - Trend component: can be explained by oil price decreasing</br>
 - Remainder component: residuals form seasonal and trend components</br>
+
+We can use also the Dickey-Fuller test:
+```
+# Augmented Dickey-Fuller(ADF) Test
+# p-value <0.05 -> data is "stationary"
+print(adf.test(dat_ts))
+```
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Stationarity_test.jpg?raw=true" width="633" height="414">
+We can affirm that our data is stationary, we can move to the next level which is forecaste modeling.
 
 # Forecasting
 There is a lot of time series forecasting models, we can sort them into three categories:
