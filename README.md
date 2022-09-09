@@ -1,4 +1,4 @@
-# Time Series Forecasting with R (with Kaggle data)
+# Time Series Forecasting with R
 
 ## About me
 Jamel Belgacem <img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/1486053613-linkedin_79186.png?raw=true" width="20" height="20"> [LinkedIn](https://www.linkedin.com/in/jamel-belgacem-289606a7/)</br>
