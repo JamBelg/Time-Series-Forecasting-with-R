@@ -175,7 +175,7 @@ ggsave("pics/plot_promotions.png")
 
 ### Stationarity
 
-Is our data stationary. It is a very important aspect as our data involves time, it is important that the bahavior of our data (mean, variance) remains constant to predict the futur. We have to look into the sales variation in time to see any frequency.</br>
+Stationarity is a very important aspect as our data involves time, it is important that the bahavior of our data (mean, variance) remains constant to predict the futur. We have to look into the sales variation in time to see any frequency.</br>
 To do that, we can use `stl function` (Seasonal Decomposition of Time Series by Loess).
 ```
 # Seasonal decomposition
