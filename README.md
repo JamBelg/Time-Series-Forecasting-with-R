@@ -245,7 +245,9 @@ splits %>%
 ## Automatic models
 
 ### ARIMA
-ARIMA is abbreviation of Auto Regressive Integrative Moving Average. It is a combination of a moving average and autoregressive model.
+ARIMA is abbreviation of Auto Regressive Integrative Moving Average. It is a combination of a moving average and autoregressive model. The only mode possible is regression, for engine you have two possibilities:</br>
+- auto_arima: for rapid estimation of model (by default)
+- arima: where you can adapt manually the settings of model
 ```
 model_fit_arima <- arima_reg() %>%
   set_engine("auto_arima") %>%
