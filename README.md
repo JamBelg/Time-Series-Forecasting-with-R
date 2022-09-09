@@ -216,8 +216,8 @@ We can use also the Dickey-Fuller test:
 # p-value <0.05 -> data is "stationary"
 print(adf.test(dat_ts))
 ```
-<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Stationarity_test.jpg?raw=true" width="633" height="414">
-We can affirm that our data is stationary, we can move to the next level which is forecaste modeling.
+<img src="https://github.com/JamBelg/Time-Series-Forcasting-with-R/blob/main/pics/Stationarity_test.jpg?raw=true" width="462" height="106">
+We can affirm that our data is stationary, we can move to the next level which is forecasting.
 
 # Forecasting
 There is a lot of time series forecasting models, we can sort them into three categories:
